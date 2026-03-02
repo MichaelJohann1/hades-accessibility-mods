@@ -1,0 +1,165 @@
+Hades accessibility mods changelog
+
+*Version 34: Released 03/01/2026
+Added tolk support for all in-game menus.
+The main menu and pause menu are not accessible, and as of now are not able to be made accessible.
+Mods are now in one DLL. No needing to install python to install the mods.
+ModUtil upgraded to v2.10.0
+
+*Version 33: Released 12/08/2021
+Any breakable urns that contain obols will now be listed in the rewards menu if there is no active combat.
+
+*Version 32: Released 10/27/2021
+Fixed an obscure bug in the Temple of Styx hub that caused Cerberus not to be listed in the rewards menu if the satyr sack was picked up in the fifth and final tunnel.
+Fixed an issue that would allow Cerberus to be bypassed in the above scenario.
+
+*Version 31: Released 08/19/2021
+Includes a brand-new mod called AccessibleBroker which modifies the Wretched Broker interface to make it compatible with OCR.
+
+*Version 30: Released 08/12/2021
+Fixed a bug in the shop menu that would display a blank line if a sack of obols loaded in the room.
+
+*Version 29: Released 08/07/2021
+Fixed a very rare bug where Cerberus would show up as a valid NPC in the rewards menu when he was not in the house.
+Enshrouded doors that are infernal gates will now be indicated as such, rather than simply stating elite.
+
+*Version 28: Released 08/07/2021
+The doors, rewards, and shop menus will now display your health and obols count at the top, above the selectable items in their respective menus.
+Doors that lead to rooms with boss or mini-boss fights will now state "Boss" or "Mini-Boss" instead of the generic term "Elite.  Elite rooms that are not boss or mini-boss rooms will continue to be indicated by the word "Elite".
+The resources menu will now display your equipped weapon, its current aspect, and the level of the aspect.
+The sacks of obols that sometimes spawn in Charon's shops have been moved from the shop menu to the rewards menu, given they are not purchasable items.
+
+*Version 27: Released 08/06/2021
+Fixed an issue that caused the full god gauge sound not to play properly.
+
+*Version 26: Released 08/05/2021
+Includes a brand-new mod called GodGaugeSounds which will provide prominent audible cues as the god gauge charges up.  Each time the gauge fills a new pip on the screen (1 visual pip = 1 useable charge), an audible ping will indicate how many charges there are.  When the god gauge is completely full, a different, more prominent sound will play.  For example, if you have Artemis's aid, when the gauge reaches 20%, one ping will be played.  At 40%, there will be 2 pings.  At 60%, 3 pings.  At 80%, 4 pings.  And at 100%, the sound for a full gauge.
+Food that does not require interaction (such as those dropped by monsters or Shady) will now be indicated by the word "Dropped" in parentheses after the word "Food" when shown in the rewards menu.  The reason for this is to make it more apparent that no interaction is required after selecting it.  This is in contrast to food from say Demeter's nourished soul boon, which will be shown as simply "Food" and will require interaction to pick up once selected.  Note that dropped food will always be listed in the rewards menu before food that requires interaction.
+The house contractor, wretched broker, and head chef will no longer appear in the rewards menu during a dream sequence.
+
+*Version 25: Released 08/03/2021
+Fixed a couple more NPC issues around Meg visiting Sisyphus and did some coad clean-up to address and handle other NPC cases.
+
+*Version 24: Released 08/03/2021
+Disabled the displaying of any NPCs in the rewards menu during a dream sequence/flashback, as teleporting to them ends up sending Zagreus to invalid points which break the game.
+Fixed the issue where Zagreus would be teleported to invalid locations after a Meg/Thanatos encounter in his bedroom and the NPC had left the room.
+
+*Version 23: Released 07/30/2021
+If Hades appears in the garden, The player will no longer be transported to an invalid location when selecting him from the rewards menu.
+
+*Version 22: Released 07/29/2021
+While in the House of Hades, hitting the boon info button (select/back on a controller, b on a keyboard) now brings up the rewards menu.  This makes the behavior consistent with Greece, where the boon button has always brought up the rewards menu.
+While in the House of Hades, the button to bring up the resource list has been moved to special attack (Y on a controller, q on a keyboard).
+All other mod controls/buttons continue to work as before.
+Any NPC on which Zagreus can perform some action (talking, listening, gifting, petting, etc.) now appears in the rewards menu.  This includes all NPCs within the House of Hades.  Note that since Cerberus can always be petted, he will always be present within the rewards menu while in the main part of the house.
+Once an NPC can no longer have any action performed on them, they will disappear from the rewards menu.  For example, suppose Nyx appears in the rewards menu.  You go to her and talk to her.  She may still continue to appear in the list because she can still be given a gift.  If you then give her a gift, she will disappear.
+Note that the above is in line with how things work for a sighted player, as characters have animations above them which show whether you can speak to them, gift them, etc.
+If two NPCs are engaged in a conversation that Zagreus can listen to, both NPCs will appear in the rewards menu.  You can select either one (it does not matter), and interacting will trigger the dialog.  Once the dialog is complete, both NPCs will disappear from the rewards menu, assuming no further action can be taken with either, which is normally the case.
+The house contractor, wretched broker, and head chef have also been added to the rewards menu in the main house.  Note they will only appear if they can be interacted with, for example, the head chef after you have caught fish.  They will also only appear once they are present, so they may not appear in the first few runs of a brand-new game.
+NPCs with whom optional interactions/gifting are possible during a run will now appear in the rewards menu as well.  These include (but are not limited to) Charon, Bouldy, Nyx when she appears in Chaos's room, Cerberus in Styx (once the satyr sack has been obtained), and Persephone within Greece after beating the final boss.
+Regarding Persephone in Greece, it is important to note that Greece consists of two rooms, and Persephone is located within the second room.  So when you enter Greece, you will still have to walk up and to the right until you get to the second room before you can bring up the rewards menu, select Persephone, and be teleported to her.
+The slight bug introduced in the previous update where the stygian blade disappeared from the rewards menu in the courtyard and instead was replaced by a second eternal spear has been fixed.
+
+*Version 21: Released 07/28/2021
+Skelly will now appear at the top of the rewards menu when you are in the courtyard.
+
+*Version 20: Released 07/26/2021
+Optional reward items from boon choices such as sunken treasure will now appear in the rewards menu.  The following items are all included:
+• Gems dropped by bosses due to Vanquisher's Keep
+• Darkness, gems, and nectar from infernal troves (note that health and obols from troves are automatically applied by the game, so you don't pick them up)
+• Food and darkness from a Sisyphus encounter in Tartarus (note that obols from Sisyphus are automatically applied by the game, so you don't pick them up)
+• Food, darkness, gems, nectar, and diamonds from Poseidon's sunken treasure boon (note that obols from sunken treasure are automatically applied by the game, so you don't pick them up)
+• Food from Demeter's nourished soul boon
+• Nectar from Dionysus's premium vintage boon
+• Food, obols, and darkness dropped by Shady
+• Food from broken urns while Dusa's harpy feather duster keepsake is equipped
+
+*Version 19: Released 07/23/2021
+Changed the ding sound that indicates there are optional rewards to something unique ( a lower-pitched ding than the one for fishing).
+Restored the standard fishing ding sound for when a fishing spot spawns.  Note this means that if a fishing spot spawns, two dings will be played: one to indicate there are optional rewards and one to indicate there is a fishing spot.  The game plays the fishing ding on a very slight delay, and the two dings work together nicely.
+If there are optional rewards after room exits are unlocked, the doors menu will no longer be automatically displayed.
+When a selection is made from any of the mod menus, a sound is now played in addition to the menu close sound.  This way, if a valid selection is made, it sounds different than if the menu were simply canceled/dismissed without making a selection.
+
+*Version 18: Released 07/23/2021
+Some significant changes to the rewards menu.  Details are as follows:
+A ding sound will now be played when the exit doors to a room are unlocked (typically by picking up the room clear reward) if any "rewards" are present in the room.  This means no more having to dismiss the doors menu when it automatically pops up and executing the command to display the rewards menu just to check it to see if there is anything present, such as monster-dropped food.  Note that I used the fishing point ding sound as the indicator for this, since everyone's ears are already accustomed to it.
+Fishing points will no longer be displayed in the rewards menu during combat, as it is not possible to fish at that time.
+Infernal troves, wells of Charon, and pools of purging will now only be displayed once a room's exits are unlocked, as they cannot be used prior.  Displaying them prior to clearing a room gave the player the ability to port around the room during a fight, which should not be permitted.  They also clutterred up the rewards menu during a battle, making it harder to select far more important items, such as the mandragora curing pools or dropped food.
+Forced an order to how items are displayed in the rewards menu as follows: mandragora curing pools, room clear rewards, monster-dropped food, fishing points, infernal troves, wells of Charon, pools of purging
+Mandragora curing pools now only appear in the rewards menu during a battle, as they are useless after the fight is completed.  There is no reason to clutter up the rewards menu with them.
+If a room has multiple mandragora curing pools, as can happen in the last room of a satyr tunnel, all of them are now displayed in the rewards menu during a battle, not just one of them as was the case before.
+
+*Version 17: Released 07/17/2021
+The issue of new players/new games not being able to bring up the mods until they get a boon has now been resolved.  Even if you have god mode off and have no boons, you will now be able to successfully bring up the mods the same way in the first room of the run or within the courtyard (or within any room of a run in fact).
+
+*Version 16: Released 07/12/2021
+Contains a few fixes to how various infernal gates are displayed.
+
+*Version 15: Released 07/04/2021
+There was a relatively minor and rare bug in the relationship menu mod where sometimes the codex tooltip was stuck on the screen after the mod was invoked, making OCR of other text quite difficult.  This has now been fixed.
+
+*Version 14: Released 07/03/2021
+New Mod!  The Relationship Menu Mod which displays the status of Zagreus's relationships with all other characters.  Please see the README for details.
+
+*Version 13: Released N/A
+Used for internal dev team testing; not released to the public.
+
+*Version 12: Released 06/30/2021
+Fixed rare and obscure bug with the shop menu that would occasionally cause it to crash if trying to bring it up in certain rooms that were not shops.
+
+*Version 11: Released 06/29/2021
+Added support for companions.  If you have a companion, you will now see it displayed in the resources list, along with its current level and number of uses remaining.  It will be shown right below your keepsake like this: Companion: Antos (Level 3, Uses 3)
+
+*Version 10: Released 06/22/2021
+Added support for the sack of obols that sometimes appears randomly in Charon's shops, which if picked up, will trigger an elite fight with Charon himself. Now if the sack of obols spawns, you will see the following in the list of shop items: Sack of Obols (Elite)
+Fixed bug that caused the rewards menu to crash with certain kinds of troves.
+
+*Version 9: Released 06/21/2021
+Redesigned the shop mod to deal with pesky bugs.  Note that items with the same name will no longer be grouped together in the shop menu and will be listed individually.
+Purchasing items without using the shop menu will no longer break things.
+
+*Version 8: Released 06/19/2021
+Rewards Menu:
+Added the escape window to the rewards menu when in the courtyard.  This really was not needed, but I find it a convenience, so I put it in there.  Note the window is an interactable object, not a door, which is why it's in the rewards menu.
+The key to bring up the resources menu in the house has been changed from the special attack button (Y/q) to the boon button (View/b).
+When in Greece, the rewards menu can now be brought up by hitting the boon button (view on Xbox controllers, b on the keyboard).  Greece is another one of those areas where the boon screen is disabled, so there was no way to bring up the rewards menu before. The reason why this is very important is because there is a good chance you may get a fishing spot in the room with Persephone, but unlike other fishing spots, this one is silent and does not make the ding sound when spawned.  Note that if the fishing point does not spawn, then hitting the boon button will do nothing.
+There was still some inconsistent behavior with correctly identifying the weapon with dark thirst immediately following a run; This has now been fixed.
+
+*Version 7: Released N/A
+Used for internal dev team testing; not released to the public.
+
+*Version 6: Released 06/18/2021
+Fated rerolls from the Mirror of Night's fated authority / Persuasion powers will now be displayed in the resources screen while in a run.  Note that they will not be visible if you haven't invested darkness into either power.
+
+*Version 5: Released 06/17/2021
+Doors Mod:
+Chaos gates and Infernal gates now show up in the doors menu.
+The exit door out of Styx's main room will now only be displayed if the satyr sack has been given to Cerberus.
+Other bug fixes and some renaming of certain doors, so they no longer say "Default" and such.
+Resources Mod:
+Your equipped keepsake is now displayed, along with its current level and number of encounters required to upgrade it to the next level.
+The resource list can now be brought up in the home area by hitting the special attack button (Y on Xbox controller, q on keyboard). Note that this is only for the home area; in all other areas, you use the standard key presses as before.
+Shop Mod:
+Duplicate items are now shown as one item with their respective quantities; for example, (2) Pom of Power.
+Fixed issue that could cause a crash when purchasing duplicate items.
+NoTrapDamage Mod:
+Fixed bug where if you quit a game and reloaded while in a room with magma, you would take damage until you moved into the next room. Now you can reload the game without taking any damage.
+Rewards Mod:
+In addition to fishing points, rewards menu will now list infernal troves, wells of Charon, and pools of purging.
+Infernal troves are listed with their contents indicated (Obols, health, darkness, or gems).  Note that this is visually shown; blind players just had no way until now to see this information. It is very useful, since if you don't need a particular resource, you can skip the trove without opening it.
+Rewards menu will now show the poison curing pools in Temple of Styx chambers. You will be able to transport to them and interact to drink.
+Food that monsters drop when they are killed (such as when you have Eye of Lamia) will now be listed. Note that transporting to them automatically picks them up, so you do not have to interact after selecting food from the menu.
+The keepsake display case will now be shown as an option in the rewards menu when in the courtyard or in the stairways between biomes if you have the appropriate house contractor upgrade.
+The currently equipped weapon now shows "Equipped" when viewing list of weapons in infernal arms.
+Fixed bug where two weapons after a run could show as having dark thirst.
+
+*Version 4: Released 06/15/2021
+Rewards: Rewards menu now shows fishing pools when they spawn.
+Resources: Complete rewrite of how the information is displayed on the screen. Data pertaining to runs are no longer displayed when in the courtyard. During a run, the current chamber number is displayed at the very top with your health and other run-specific stats.  Permanent resource counts are now shown last and are ordered in increasing value based on the Wretched Broker valuations.
+Doors: When entering a shop, the doors menu will no longer automatically and immediately display. This was not useful, given we all had to just dismiss it, so we could then look at the items in the shop.
+
+*Version 3: Released 06/14/2021
+The rewards menu will now display which weapon in the infernal arms has the dark thirst property (visually, this is represented in purple).  Note that weapons initially do not have this property, so if you have just started playing, this will not appear.
+
+*Version 2: Released 06/13/2021
+Fixed various crash bugs when using the shop menu.
