@@ -24,7 +24,14 @@ Copy all the DLL files (xinput1_4.dll, Tolk.dll, nvdaControllerClient64.dll) to 
 
 All in-game menus now have screen reader support through Tolk. When you navigate menus, items and descriptions will be spoken automatically by your screen reader.
 
-The main menu and pause menu are not able to be made accessible. For a guide on navigating these menus, click [here](https://blackscreengaming.com/hades/menus/index.php).
+The following menus are engine-level menus and are not accessible. These are not in-game menus and cannot be made accessible through modding:
+
+- Main Menu / Title Screen
+- Pause Menu
+- Settings Menu
+- Save File Select
+
+For a guide on navigating these menus, click [here](https://blackscreengaming.com/hades/menus/index.php).
 
 ## Mod Keystrokes
 
