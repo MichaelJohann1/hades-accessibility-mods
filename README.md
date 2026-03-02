@@ -15,7 +15,7 @@ Extra note: This guide will focus on the Steam build because it's the most used 
 
 ### Using the Installer
 
-Download the installer [here](https://github.com/MichaelJohann1/hades-accessibility-mods/releases/download/installer-1.1/HadesAccessibilityInstaller.exe). Run the installer. It will ask you to browse for your game directory. If it already has your game directory shown, just tab to Install and press Enter. There are also 2 checkboxes for the readme and changelog if you'd like to save them to the folder the installer is in. Once the mods are installed, a Copy Debug Log button will be available to copy the debug log file to your clipboard.
+Download the installer [here](https://github.com/MichaelJohann1/hades-accessibility-mods/releases/latest/download/HadesAccessibilityInstaller.exe). Run the installer. It will ask you to browse for your game directory. If it already has your game directory shown, just tab to Install and press Enter. There are also 2 checkboxes for the readme and changelog if you'd like to save them to the folder the installer is in. Once the mods are installed, a Copy Debug Log button will be available to copy the debug log file to your clipboard.
 
 ### Manual Installation
 
