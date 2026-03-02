@@ -89,7 +89,7 @@ This mod was made by Michael Johann with help from Claude.
 
 Huge thanks to the original devs hllf and JLove. Without you this could not have been done!
 
-Also a big thanks to Hamada. Without him showing that adding Tolk support to Hades' in-game menus was possible by providing the skeleton for the DLL, this would not be out!
+Huge thanks to Hamada for showing that adding Tolk support to the in-game menus of Hades was possible and providing the skeleton for the DLL.
 
 Menu guide: Smoke from Black Screen Gaming.
 
