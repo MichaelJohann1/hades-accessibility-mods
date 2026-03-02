@@ -1,5 +1,11 @@
 Hades accessibility mods changelog
 
+*Version 34.1: Released 03/02/2026
+Fixed a bug where the music player in the house contractor showed different song names than the actual music player.
+Added Tight Deadline timer notifications: periodic time remaining announcements at milestones (5 min, 3 min, 2 min, 1 min, 30 sec, 10 sec), health updates every 3 seconds during timer damage, and accurate remaining time on biome re-entry (e.g. returning from Chaos).
+Fixed Lucky Tooth keepsake being announced as "Death Defiance" instead of "Lucky Tooth" when consumed.
+Fixed Darkness run-progress drops (+5 Max Health) being incorrectly announced as "Acquired: Centaur Heart".
+
 *Version 34: Released 03/01/2026
 Added tolk support for all in-game menus.
 The main menu and pause menu are not accessible, and as of now are not able to be made accessible.
