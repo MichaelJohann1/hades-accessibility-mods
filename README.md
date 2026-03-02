@@ -19,7 +19,11 @@ Download the installer [here](https://github.com/MichaelJohann1/hades-accessibil
 
 ### Manual Installation
 
-Download the latest mod release [here](https://github.com/MichaelJohann1/hades-accessibility-mods/releases/latest). Copy all the DLL files (xinput1_4.dll, Tolk.dll, nvdaControllerClient64.dll) to your Hades install folder's x64 directory. For example: `C:\Program Files (x86)\Steam\steamapps\common\Hades\x64`
+Download the following files and copy them to your Hades install folder's x64 directory (e.g. `C:\Program Files (x86)\Steam\steamapps\common\Hades\x64`):
+
+- [xinput1_4.dll](https://github.com/MichaelJohann1/hades-accessibility-mods/releases/latest/download/xinput1_4.dll)
+- [Tolk.dll](https://github.com/MichaelJohann1/hades-accessibility-mods/releases/latest/download/Tolk.dll)
+- [nvdaControllerClient64.dll](https://github.com/MichaelJohann1/hades-accessibility-mods/releases/latest/download/nvdaControllerClient64.dll)
 
 ## Using the Mods
 
