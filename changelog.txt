@@ -2,8 +2,7 @@ Hades accessibility mods changelog
 
 *Version 34.1.1: Released 03/02/2026
 Updated the readme to be more clear about which menus are not accessible. The main menu, pause menu, settings menu, and save file select are engine-level menus that cannot be made accessible through modding.
-Updated the mod installer to automatically check for and download new installer versions on startup.
-Updated the mod installer to save the readme and changelog to the folder the installer is run from instead of the desktop.
+Added an official copy of Hades to the requirements.
 
 *Version 34.1: Released 03/02/2026
 Fixed a bug where the music player in the house contractor showed different song names than the actual music player.
