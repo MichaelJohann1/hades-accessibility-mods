@@ -8,6 +8,7 @@ Extra note: This guide will focus on the Steam build because it's the most used 
 
 ## Requirements
 
+- An official copy of Hades
 - NVDA
 
 ## Installing the Mods
