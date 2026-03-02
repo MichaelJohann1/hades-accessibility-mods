@@ -1,9 +1,5 @@
 Hades accessibility mods changelog
 
-*Version 34.1.1: Released 03/02/2026
-Updated the readme to be more clear about which menus are not accessible. The main menu, pause menu, settings menu, and save file select are engine-level menus that cannot be made accessible through modding.
-Added an official copy of Hades to the requirements.
-
 *Version 34.1: Released 03/02/2026
 Fixed a bug where the music player in the house contractor showed different song names than the actual music player.
 Added Tight Deadline timer notifications: periodic time remaining announcements at milestones (5 min, 3 min, 2 min, 1 min, 30 sec, 10 sec), health updates every 3 seconds during timer damage, and accurate remaining time on biome re-entry (e.g. returning from Chaos).
