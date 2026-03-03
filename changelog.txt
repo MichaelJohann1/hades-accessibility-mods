@@ -5,6 +5,9 @@ Updated Well of Charon items that give you random items from the well (Fateful T
 Fixed several Well of Charon item descriptions that had unresolved template variables instead of actual values.
 Added Pom of Power per-level upgrade values so you can see the actual stat changes when upgrading a boon (e.g. "10% to 14%").
 Fixed a crash when purchasing consumable items from the Well of Charon.
+Mirror of Night talent switching is now fully accessible. When navigating left to the exchange button, you will hear the alternate talent's name, level, description, and flavor text. Pressing the button announces the switch confirmation.
+Fixed the Mirror of Night upgrade button showing the current level instead of the level you are purchasing. The cost, level, and description now all match the upgrade you are about to buy.
+Fixed Tight Deadline pact announcement being 1 minute less than the actual time remaining when entering a new biome.
 
 *Version 34.1: Released 03/02/2026
 Fixed a bug where the music player in the house contractor showed different song names than the actual music player.

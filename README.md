@@ -17,6 +17,16 @@ Extra note: This guide will focus on the Steam build because it's the most used 
 
 Download the installer [here](https://github.com/MichaelJohann1/hades-accessibility-mods-installer/releases/latest/download/HadesAccessibilityInstaller.exe). Run the installer. It will ask you to browse for your game directory. If it already has your game directory shown, just tab to Install and press Enter. There are also 2 checkboxes for the readme and changelog if you'd like to save them to the folder the installer is in. Once the mods are installed, a Copy Debug Log button will be available to copy the debug log file to your clipboard.
 
+### Removing Old Mods
+
+If you have any previous version of the accessibility mods installed that used the Content\Mods folder, you must remove them before installing the new version. Delete the following from your Hades game\Content folder:
+
+- The Mods folder
+- modimporter.py
+- mods.log (if present)
+
+The new version embeds all mods directly in the DLL, so the Content\Mods folder is no longer needed. Having old mods present will cause conflicts and may prevent some features from working correctly.
+
 ### Manual Installation
 
 Download the latest mod release [here](https://github.com/MichaelJohann1/hades-accessibility-mods/releases/latest). Copy all the DLL files (xinput1_4.dll, Tolk.dll, nvdaControllerClient64.dll) to your Hades install folder's x64 directory. For example: `C:\Program Files (x86)\Steam\steamapps\common\Hades\x64`
@@ -32,7 +42,7 @@ The following menus are engine-level menus and are not accessible. These are not
 - Settings Menu
 - Save File Select
 
-For a guide on navigating these menus, click [here](https://blackscreengaming.com/hades/menus/index.php).
+For a guide on navigating these menus, click [here](https://blackscreengaming.com/hades/menus/index.php). If you are new to Hades, it is highly recommended that you read this guide before starting the game.
 
 ## Mod Keystrokes
 
