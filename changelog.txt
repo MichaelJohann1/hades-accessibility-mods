@@ -1,5 +1,11 @@
 Hades accessibility mods changelog
 
+*Version 34.2: Released 03/03/2026
+Updated Well of Charon items that give you random items from the well (Fateful Twist) to announce what you received.
+Fixed several Well of Charon item descriptions that had unresolved template variables instead of actual values.
+Added Pom of Power per-level upgrade values so you can see the actual stat changes when upgrading a boon (e.g. "10% to 14%").
+Fixed a crash when purchasing consumable items from the Well of Charon.
+
 *Version 34.1: Released 03/02/2026
 Fixed a bug where the music player in the house contractor showed different song names than the actual music player.
 Added Tight Deadline timer notifications: periodic time remaining announcements at milestones (5 min, 3 min, 2 min, 1 min, 30 sec, 10 sec), health updates every 3 seconds during timer damage, and accurate remaining time on biome re-entry (e.g. returning from Chaos).
