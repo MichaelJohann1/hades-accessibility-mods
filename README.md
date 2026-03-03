@@ -35,6 +35,10 @@ Download the latest mod release [here](https://github.com/MichaelJohann1/hades-a
 
 All in-game menus now have screen reader support through Tolk. When you navigate menus, items and descriptions will be spoken automatically by your screen reader.
 
+Press the backslash key (\\) to toggle subtitle reading on or off. When enabled, all dialogue text will be spoken with the speaker's name (e.g. "Achilles: I hope you're well, lad.").
+
+Subtitles are off by default. Your preference is saved automatically and will persist across game sessions. If you turn subtitles on, they will stay on the next time you launch the game.
+
 The following menus are engine-level menus and are not accessible. These are not in-game menus and cannot be made accessible through modding:
 
 - Main Menu / Title Screen
@@ -89,9 +93,32 @@ There are two mods in the package which do not have keystrokes, as they work in 
 
 Aaron77 and hllf worked on an excellent Hades video tutorial which you can find [here](https://youtu.be/G05IHIRLAgE).
 
+## Support
+
+If you have bugs that make the game or the mod not playable, or you notice the mod is missing something, please send a log to the Hades support channel on [this Discord server](https://discord.gg/V8tvAN84Mr).
+
+To find your log, go to the logs folder in your x64 folder in your Hades game directory and either copy the latest log or the log that the error was in. Logs are timestamped. Or you can open the installer and press the Open Log Folder button. This will only work if the game has been run at least once.
+
+If you just have a suggestion, you don't need to include a log. Suggestions should also be posted to the Hades support channel, not the Hades general channel.
+
 ## Donate
 
 If you enjoy this project and would like to support its development, you can donate [here](https://ko-fi.com/michaeljohann).
+
+## Translation
+
+If you would like the game's speech output to be translated into a language other than English, you can use the NVDA Instant Translate addon. This approach supports more languages than Hades ever could.
+
+You can download the addon from the [NVDA Add-ons website](https://addons.nvda-project.org/addons/instantTranslate.en.html) or find it in the NVDA Add-on Store.
+
+To set it up:
+
+1. Open NVDA Preferences, then Settings.
+2. Go to the Instant Translate section.
+3. Set your source language to English.
+4. Set your target language to the language you want to translate to.
+5. Hit OK.
+6. Press NVDA+Shift+T, then V to enable auto translate.
 
 ## Credits
 
@@ -102,5 +129,7 @@ Huge thanks to the original devs hllf and JLove. Without you this could not have
 Huge thanks to Hamada for showing that adding Tolk support to the in-game menus of Hades was possible and providing the skeleton for the DLL.
 
 Menu guide: Smoke from Black Screen Gaming.
+
+NVDA Instant Translate addon: Alexy Sadovoy, Beqa Gozalishvili, Mesar Hameed, Alberto Buffolino and other NVDA contributors.
 
 ReadMe author: Ryok, updated by Michael Johann.

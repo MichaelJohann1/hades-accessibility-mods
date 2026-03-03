@@ -1,5 +1,10 @@
 Hades accessibility mods changelog
 
+*Version 34.2.1: Released 03/03/2026
+Added subtitle reading. Press the backslash key (\) to toggle subtitle reading on or off. When enabled, dialogue text will be spoken with the speaker's name (e.g. "Achilles: text"). Subtitles are off by default. Your preference is saved across game sessions.
+Health, Max Health, and Healing icons are now spoken as words instead of being silently removed. For example, boon and fountain descriptions that previously read "+25" now correctly read "+25 Max Health".
+Health notifications now interrupt instead of queuing, so rapid hits from enemies always speak your current health rather than reading out a backlog of stale numbers.
+
 *Version 34.2: Released 03/03/2026
 Updated Well of Charon items that give you random items from the well (Fateful Twist) to announce what you received.
 Fixed several Well of Charon item descriptions that had unresolved template variables instead of actual values.
