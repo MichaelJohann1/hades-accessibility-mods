@@ -1,5 +1,8 @@
 Hades accessibility mods changelog
 
+*Version 34.3: Released 03/04/2026
+Added accessibility support for the Surface (Greece). The location "The Surface" is now announced when you reach it after defeating Hades. The Reward Menu can be opened with B/Select on the surface, showing inspect points and Persephone. A "Path to Garden" entry in the Reward Menu allows navigating from the arrival area to Persephone's garden.
+
 *Version 34.2.2: Released 03/04/2026
 Fixed health icon text not being read in fountain chamber descriptions. For example, healing fountain descriptions that previously read "Restores some amid..." now correctly read "Restores some Health amid...", and fountain upgrades that read "+10% more than usual" now read "+10% more Healing than usual".
 
