@@ -1,5 +1,8 @@
 Hades accessibility mods changelog
 
+*Version 34.2.2: Released 03/04/2026
+Fixed health icon text not being read in fountain chamber descriptions. For example, healing fountain descriptions that previously read "Restores some amid..." now correctly read "Restores some Health amid...", and fountain upgrades that read "+10% more than usual" now read "+10% more Healing than usual".
+
 *Version 34.2.1: Released 03/03/2026
 Added subtitle reading. Press the backslash key (\) to toggle subtitle reading on or off. When enabled, dialogue text will be spoken with the speaker's name (e.g. "Achilles: text"). Subtitles are off by default. Your preference is saved across game sessions.
 Health, Max Health, and Healing icons are now spoken as words instead of being silently removed. For example, boon and fountain descriptions that previously read "+25" now correctly read "+25 Max Health".
