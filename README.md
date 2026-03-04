@@ -19,7 +19,7 @@ Download the installer [here](https://github.com/MichaelJohann1/hades-accessibil
 
 ### Removing Old Mods
 
-If you have any previous version of the accessibility mods installed that used the Content\Mods folder, the installer will automatically detect and remove these old files for you. This includes the Mods folder, modimporter.py, and mod.log. The new version embeds all mods directly in the DLL, so the Content\Mods folder is no longer needed. Having old mods present will cause conflicts such as game freezes on room transitions.
+If you have any previous version of the accessibility mods installed that used the Content\Mods folder, the installer will automatically detect and remove these old files for you. This includes the Mods folder, modimporter.py, and mod.log. The new version embeds all mods directly in the DLL, so the Content\Mods folder is no longer needed. Having old mods present causes conflicts including game freezes on room transitions and mod menus not opening.
 
 If you are installing manually, delete the following from your Hades game\Content folder:
 
