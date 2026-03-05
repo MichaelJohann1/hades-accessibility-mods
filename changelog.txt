@@ -1,5 +1,8 @@
 Hades accessibility mods changelog
 
+*Version 34.5: Released 03/05/2026
+Added display names and descriptions for all 29 duo boons, which previously read as raw internal trait names with no descriptions.
+
 *Version 34.4: Released 03/05/2026
 Added boon descriptions and actual stat values to the Pool of Purging (Sell Trait menu). Each boon now shows its description and current rarity/level-scaled values when navigating the list.
 Fixed NPC room choices (Sisyphus, Eurydice, Patroclus) giving the wrong reward. For example, choosing Obols could give Health instead. The buttons were being labeled in the wrong order.
