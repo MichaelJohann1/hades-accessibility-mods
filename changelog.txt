@@ -1,5 +1,12 @@
 Hades accessibility mods changelog
 
+*Version 34.4: Released 03/05/2026
+Added boon descriptions and actual stat values to the Pool of Purging (Sell Trait menu). Each boon now shows its description and current rarity/level-scaled values when navigating the list.
+Fixed NPC room choices (Sisyphus, Eurydice, Patroclus) giving the wrong reward. For example, choosing Obols could give Health instead. The buttons were being labeled in the wrong order.
+Fixed Premium Vintage (Dionysus boon) nectar health restoration being incorrectly announced as "Acquired: Centaur Heart". It now says the correct amount of Max Health gained from Premium Vintage.
+Fixed Pom of Power showing all boons as "Common" rarity instead of their actual rarity (Rare, Epic, Heroic, etc.).
+Fixed "Acquired: Deus Ex Machina" being announced at the start of every run when God Mode is enabled.
+
 *Version 34.3: Released 03/04/2026
 Added accessibility support for the Surface (Greece). The location "The Surface" is now announced when you reach it after defeating Hades. The Reward Menu can be opened with B/Select on the surface, showing inspect points and Persephone. A "Path to Garden" entry in the Reward Menu allows navigating from the arrival area to Persephone's garden.
 
