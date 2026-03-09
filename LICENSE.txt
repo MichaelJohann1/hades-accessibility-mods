@@ -36,7 +36,8 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 ---
 
-Note: The original DLL proxy skeleton by hllf (2021) is licensed separately
-under the MIT License. See LICENSE-ORIGINAL.txt for details. All subsequent
-development, accessibility features, Lua mods, and modifications are covered
-by this license.
+Note: The original Lua accessibility mods by hllf (2021) are licensed
+separately under the MIT License. See LICENSE-ORIGINAL.txt for details. All
+subsequent development, including the DLL, the C++ codebase, new Lua mods,
+and all other code and modifications, are the work of Michael Johann and are
+covered by this license.
