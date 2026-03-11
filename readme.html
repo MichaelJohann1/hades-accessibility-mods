@@ -1,0 +1,213 @@
+<html>
+<head>
+<title>ReadMe</title>
+</head>
+<body>
+<h1>Making Hades Accessible</h1>
+<p><strong>Note: This project is no longer being actively developed. The source code is available for anyone who wishes to continue the work.</strong></p>
+<p>This guide will show you how to install and use the Hades accessibility mods.</p>
+<p>Note: This guide assumes that you have Hades already installed. If you need help with Hades's installation, your search engine of choice is the answer.</p>
+<p>Extra note: This guide will focus on the Steam build because it's the most used client among the blind.</p>
+
+<h2>Requirements</h2>
+<ul>
+<li>An official copy of Hades</li>
+<li>Your preferred screen reader</li>
+</ul>
+
+<h2>Installing the Mods</h2>
+
+<h3>Using the Installer</h3>
+<p>Download the installer <a href="https://github.com/MichaelJohann1/hades-accessibility-mods-installer/releases/latest/download/HadesAccessibilityInstaller.exe">here</a>. Run the installer. It will ask you to browse for your game directory. If it already has your game directory shown, just tab to Install and press Enter. There are also 2 checkboxes for the readme and changelog if you'd like to save them to the folder the installer is in. Once the mods are installed, an Open Debug Log Folder button will be available to open the folder containing debug log files. There are also View License and View Original License buttons to view the license files.</p>
+<p>The installer source code is available in a <a href="https://github.com/MichaelJohann1/hades-accessibility-mods-installer">separate repository</a>.</p>
+
+<h3>Removing Old Mods</h3>
+<p>If you have any previous version of the accessibility mods installed that used the Content\Mods folder, the installer will automatically detect and remove these old files for you. This includes the Mods folder, modimporter.py, and mod.log. The new version embeds all mods directly in the DLL, so the Content\Mods folder is no longer needed. Having old mods present causes conflicts including game freezes on room transitions and mod menus not opening.</p>
+<p>If you are installing manually, delete the following from your Hades game\Content folder:</p>
+<ul>
+<li>The Mods folder</li>
+<li>modimporter.py</li>
+<li>mod.log (if present)</li>
+</ul>
+
+<h3>Manual Installation</h3>
+<p>Download the latest mod release <a href="https://github.com/MichaelJohann1/hades-accessibility-mods/releases/latest">here</a>. Copy all the DLL files (xinput1_4.dll, Tolk.dll, nvdaControllerClient64.dll) to your Hades install folder's x64 directory. For example: C:\Program Files (x86)\Steam\steamapps\common\Hades\x64</p>
+<p>For non-English language support, also copy the languages folder from the release zip to the same x64 directory.</p>
+
+<h2>Using the Mods</h2>
+<p>All in-game menus now have screen reader support through Tolk. When you navigate menus, items and descriptions will be spoken automatically by your screen reader.</p>
+
+<p>Press the backslash key (\) to toggle subtitle reading on or off. When enabled, all dialogue text will be spoken with the speaker's name (e.g. "Achilles: I hope you're well, lad.").</p>
+<p>Subtitles are off by default. Your preference is saved automatically and will persist across game sessions. If you turn subtitles on, they will stay on the next time you launch the game.</p>
+
+<p>The following menus are engine-level menus and are not accessible. These are not in-game menus and cannot be made accessible through modding:</p>
+<ul>
+<li>Main Menu / Title Screen</li>
+<li>Pause Menu</li>
+<li>Settings Menu</li>
+<li>Save File Select</li>
+</ul>
+<p>For a guide on navigating these menus, click <a href="https://blackscreengaming.com/hades/menus/index.php">here</a>. If you are new to Hades, it is highly recommended that you read this guide before starting the game.</p>
+
+<h2>Mod Keystrokes</h2>
+
+<h3>Game Controller</h3>
+<p>Hit the select button on your Xbox controller to get to the following menus:</p>
+<ul>
+<li>D-pad up to check your resources such as health, darkness, etc. Navigate items with D-pad up and down.</li>
+<li>D-pad down to open up the rewards menu to access rewards such as those that pop up after completing a chamber and god boons at the start of a run. You can also use this menu to access infernal troves, wells of Charon, pools of purging, and the curing poison fountains at the Temple of Styx during a chamber run.
+Note: each item in the rewards menu can be selected by pressing the A button on your controller. You'll be teleported to the item that you've chosen and you can interact with it by pressing the interact button (RB) on your controller.</li>
+<li>D-pad right to access the items in Charon's shop.
+Note: Press A to teleport to the selected item on the menu and interact with it by using the interact button (RB) on your controller.</li>
+<li>D-pad left to access the doors menu.
+Note: when a door is selected, you're automatically teleported to it.</li>
+<li>Open the Codex (LB) then press right trigger (RT) to access the relationships menu. Navigate items with D-pad up and down.</li>
+</ul>
+<p>You can press B on your controller to exit out of a menu without selecting anything.</p>
+<p>While in the House of Hades, hitting the select button instantly brings up the rewards menu, and hitting the special attack button (Y) on the controller brings up the resources menu. These keystrokes are specific only while within the House of Hades.</p>
+<p>
+The rewards menu in the House of Hades now opens in the room you are currently in. Each room includes objects that are only available in that room.
+In the main hall, the Mirror of Night and a door to the bedroom are available.
+In the bedroom, the Bed, Orpheus's Lyre, the Scrying Pool, and doors to the main hall and courtyard are available when unlocked.
+In the admin office, the Run Tracker, Run History, Water Cooler, Office Posters, and a door to the main hall are available.
+Inspect points are now also included in the rewards menu.
+</p>
+
+<h3>Keyboard</h3>
+<p>Press B on your keyboard and the following keys to access the following menus:</p>
+<ul>
+<li>W to check your resources such as health, darkness, etc. Navigate items with W and S.</li>
+<li>S to open up the rewards menu to access rewards such as those that pop up after completing a chamber. You can also use this menu to access god boons at the start of a run, infernal troves, wells of Charon, pools of purging, and the curing poison fountains at the Temple of Styx during a chamber run.
+Note: each item in the rewards menu can be selected by pressing the spacebar on your keyboard. You'll be teleported to the item that you've chosen and you can interact with it by pressing E.</li>
+<li>D to access the items in Charon's shop.
+Note: Press the spacebar to teleport to the selected item on the menu and interact with it by pressing E.</li>
+<li>A to access the doors menu. When a door is selected, you're automatically teleported to it.</li>
+<li>Open the Codex (C) then press G to access the relationships menu. Navigate items with W and S.</li>
+</ul>
+<p>Note: You can press backspace to exit out of a menu without selecting anything.</p>
+<p>While in the House of Hades, hitting the B key on the keyboard instantly brings up the rewards menu, and hitting the special attack key (Q) on the keyboard brings up the resources menu. These keystrokes are specific only while within the House of Hades.</p>
+<p>Extra note: JAWS users: Note that JAWS intercepts the escape and backspace keys, so if you need to pause or cancel, either use key pass-through, or use shift-escape and shift-backspace instead.</p>
+
+<h2>Damage Feedback</h2>
+<p>Press Shift+Backslash (|) on the keyboard or click the left stick (L3) on the controller to cycle through damage feedback modes:</p>
+<ul>
+<li><strong>Off</strong>: No damage feedback (default).</li>
+<li><strong>Audible Healthbars</strong>: Plays a synthesized tone when you hit an enemy. The pitch indicates the enemy's remaining health — high pitch means full health, low pitch means near death. A distinct low tone plays on kill. Armor hits have a textured noise sound.</li>
+<li><strong>Damage Dealt</strong>: Speaks the damage amount (e.g. "50 health", "30 armor", "Killed").</li>
+<li><strong>Combined</strong>: Both audible healthbars and spoken damage at the same time.</li>
+</ul>
+<p>Your damage feedback preference is saved automatically and persists across game sessions. An encounter completion sound plays when all enemies in a room are defeated.</p>
+
+<h2>Passive Mods</h2>
+<p>There are two mods in the package which do not have keystrokes, as they work in the background:</p>
+<ul>
+<li>NoTrapDamage: Makes Zagreus immune to damage from traps and standing magma. It is near impossible for a blind player to avoid these, so the mod prevents them getting in the way of gameplay.</li>
+<li>GodGaugeSounds: Plays audible cues to indicate the charging status of the god gauge, which is used by Zagreus to evoke a god's aid. As the gauge charges, a ding is played to indicate one charge is available, 2 dings when 2 charges are available, etc., until the entire gauge is full to maximum, at which point a more prominent alert is played.</li>
+</ul>
+
+<h2>Extra Resources</h2>
+<p>Aaron77 and hllf worked on an excellent Hades video tutorial which you can find <a href="https://youtu.be/G05IHIRLAgE">here</a>.</p>
+
+<h2>Support</h2>
+<p>If you have bugs that make the game or the mod not playable, or you notice the mod is missing something, please send a log to the Hades support channel on <a href="https://discord.gg/V8tvAN84Mr">this Discord server</a>.</p>
+<p>To find your log, go to the logs folder in your x64 folder in your Hades game directory and either copy the latest log or the log that the error was in. Logs are timestamped. Or you can open the installer and press the Open Log Folder button. This will only work if the game has been run at least once.</p>
+<p>If you just have a suggestion, you don't need to include a log. Suggestions should also be posted to the Hades support channel, not the Hades general channel.</p>
+
+<h2>Donate</h2>
+<p>If you liked this project and would like to donate, you can do so <a href="https://ko-fi.com/michaeljohann">here</a>. This project is no longer being developed.</p>
+
+<h2>Translation</h2>
+
+<h3>Built-in Translation</h3>
+<p>The accessibility mods include built-in translation support for 10 languages: German, Spanish, French, Italian, Japanese, Korean, Polish, Portuguese (Brazil), Russian, and Simplified Chinese. The mod automatically detects your game language from Hades' settings and translates all accessibility speech output — including menu names, item descriptions, boon information, and UI labels — into your language.</p>
+<p>To use built-in translation, simply set your preferred language in the Hades settings menu. The mod will detect the change and apply translations the next time you start the game. If a language file is not found, the mod falls back to English.</p>
+<p>Language files are included in the release zip in the languages/ folder. Copy this folder to your game's x64/ directory alongside the DLL files.</p>
+
+<h3>NVDA Instant Translate</h3>
+<p>If your language is not supported by the built-in translation, or if you prefer real-time translation of all speech output, you can use the NVDA Instant Translate addon. This approach supports more languages than Hades ever could.</p>
+<p>You can download the addon from the <a href="https://addons.nvda-project.org/addons/instantTranslate.en.html">NVDA Add-ons website</a> or find it in the NVDA Add-on Store.</p>
+<p>To set it up:</p>
+<ol>
+<li>Open NVDA Preferences, then Settings.</li>
+<li>Go to the Instant Translate section.</li>
+<li>Set your source language to English.</li>
+<li>Set your target language to the language you want to translate to.</li>
+<li>Hit OK.</li>
+<li>Press NVDA+Shift+T, then V to enable auto translate.</li>
+</ol>
+
+<h2>Building from Source</h2>
+<p>The full source code for this project is available on <a href="https://github.com/MichaelJohann1/hades-accessibility-mods">GitHub</a>.</p>
+
+<h3>Prerequisites</h3>
+<ul>
+<li>Visual Studio 2022 (Community edition or higher) with the <strong>C++ Desktop Development</strong> workload, or Visual Studio Build Tools with MSVC v143</li>
+<li>Python 3.10+</li>
+<li>Windows 10/11 x64</li>
+</ul>
+
+<h3>Project Structure</h3>
+<pre>src/cpp/          C++ DLL source (xinput1_4.dll proxy)
+src/lua/          Lua accessibility mods (29 mods)
+src/modutil/      ModUtil v2.10.0 (dependency)
+vendor/MinHook/   MinHook hooking library
+scripts/          Build and code generation scripts</pre>
+<p>The DLL works by proxying xinput1_4.dll. The game loads it thinking it's XInput, and it forwards those calls to the real system DLL while also hooking the game's Lua 5.2 runtime to add screen reader support via Tolk.</p>
+<p>All 29 Lua accessibility mods plus ModUtil are embedded directly into the DLL as C++ string literals. There are no external .lua files to deploy, just the DLL and the screen reader DLLs.</p>
+
+<h3>Build Steps</h3>
+<ol>
+<li>Clone the repository:
+<pre>git clone https://github.com/MichaelJohann1/hades-accessibility-mods.git
+cd hades-accessibility-mods</pre></li>
+<li>Generate the embedded mods file. This reads all Lua source files from src/lua/ and src/modutil/ and generates src/cpp/embedded_mods.cpp containing the Lua source as C++ raw string literals:
+<pre>python scripts/generate_embedded_mods.py</pre></li>
+<li>Build the DLL using the included build script. It auto-detects your Visual Studio installation:
+<pre>powershell -ExecutionPolicy Bypass -File scripts/build.ps1</pre>
+Alternatively, open hades.slnx in Visual Studio and build the Release x64 configuration.</li>
+</ol>
+<p>The built xinput1_4.dll will be in the x64/Release/ directory.</p>
+
+<h3>Deploying After Building</h3>
+<p>Copy the following files to your Hades install folder's x64/ directory (e.g. C:\Program Files (x86)\Steam\steamapps\common\Hades\x64\):</p>
+<ul>
+<li>xinput1_4.dll — the built accessibility DLL (from x64/Release/)</li>
+<li>Tolk.dll — screen reader abstraction library (not included in the repo; obtain from the <a href="https://github.com/ndarilek/tolk">Tolk project</a> or a previous release)</li>
+<li>nvdaControllerClient64.dll — NVDA screen reader client (obtain from <a href="https://www.nvaccess.org/">NVDA</a> or a previous release)</li>
+</ul>
+<p>For non-English language support, also generate and copy the language files:</p>
+<pre>python scripts/generate_language_files.py</pre>
+<p>This creates a languages/ folder with translation files. Copy it to the same x64/ directory.</p>
+
+<h3>Other Build Scripts</h3>
+<ul>
+<li>scripts/generate_language_files.py — generates languages/{lang}.lua files for 10 supported languages</li>
+<li>scripts/generate_ui_translations.py — generates UI string translation JSON files</li>
+<li>scripts/parse_game_text.py — parses game text data to update mod descriptions</li>
+</ul>
+
+<h3>Debug Keys</h3>
+<p>Debug keys are developer tools for spawning boons, items, and triggering game events during testing. They are <strong>disabled by default</strong> in public builds.</p>
+<p>To enable them, you must:</p>
+<ol>
+<li><strong>Build with ENABLE_DEBUG_KEYS defined</strong> — add /D ENABLE_DEBUG_KEYS to your MSBuild command or define it in the Visual Studio project settings.</li>
+<li><strong>Generate chaos.dat</strong> — run <code>python scripts/generate_chaos_dat.py</code>. This creates an 8 KB gate file validated via SHA-256 hash at runtime. Place it in the game's x64/ directory alongside the DLL. The hash is baked into the DLL at compile time, so the DLL and chaos.dat must be built together as a matched pair.</li>
+</ol>
+<p>Without both of these, debug key code is excluded from the DLL entirely.</p>
+<p>See DEBUG_KEYS.md in the repository for the full list of debug key bindings.</p>
+
+<h3>Using Claude</h3>
+<p>A CLAUDE.md file is included in this repository with detailed architecture documentation, crash history, and codebase conventions. If you use <a href="https://claude.ai/claude-code">Claude Code</a> for development, it will automatically read this file for context.</p>
+
+<h2>License</h2>
+<p>This project is licensed under the GNU General Public License v3.0. The original Lua accessibility mods by hllf (2021) are licensed under the MIT License. Third-party components (MinHook, ModUtil) retain their original licenses.</p>
+
+<h2>Credits</h2>
+<p>This mod was made by Michael Johann with help from Claude.</p>
+<p>Huge thanks to the original devs hllf and JLove. Without you this could not have been done!</p>
+<p>Huge thanks to Hamada for showing that adding Tolk support to the in-game menus of Hades was possible and providing the skeleton for the DLL.</p>
+<p>Menu guide: Smoke from Black Screen Gaming.</p>
+<p>NVDA Instant Translate addon: Alexy Sadovoy, Beqa Gozalishvili, Mesar Hameed, Alberto Buffolino and other NVDA contributors.</p>
+<p>ReadMe author: Ryok, updated by Michael Johann.</p>
+</body>
+</html>

@@ -1,0 +1,47 @@
+# Build output
+x64/
+Debug/
+Release/
+*.obj
+*.pdb
+*.ilk
+*.iobj
+*.ipdb
+
+# Visual Studio
+.vs/
+*.user
+*.suo
+
+# Auto-generated (rebuild from source)
+src/cpp/embedded_mods.cpp
+src/cpp/version.h
+
+# Debug key gate file
+chaos.dat
+
+# Binary DLLs (distributed via GitHub Releases only)
+*.dll
+!xinput1_4.def
+
+# Claude Code / editor temp files
+*.tmp.*
+.claude/
+
+# Python
+__pycache__/
+*.pyc
+
+# Runtime state files
+subtitle_on.flag
+damage_feedback_mode.flag
+language.flag
+
+# Release artifacts
+HadesAccessibilityMods*/
+*.zip
+*.log
+
+# Language files (generated from game data)
+languages/
+ui_translations/
