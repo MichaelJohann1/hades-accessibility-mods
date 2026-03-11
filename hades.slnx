@@ -1,0 +1,7 @@
+<Solution>
+  <Configurations>
+    <Platform Name="x64" />
+    <Platform Name="x86" />
+  </Configurations>
+  <Project Path="src/cpp/hades.vcxproj" Id="935725db-d4bb-4740-843c-f07476a05c2c" />
+</Solution>

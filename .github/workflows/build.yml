@@ -1,0 +1,15 @@
+name: Build
+on: [push, pull_request]
+jobs:
+  build:
+    runs-on: windows-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: microsoft/setup-msbuild@v2
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: Generate embedded mods
+        run: python scripts/generate_embedded_mods.py
+      - name: Build DLL
+        run: msbuild src/cpp/hades.vcxproj /p:Configuration=Release /p:Platform=x64

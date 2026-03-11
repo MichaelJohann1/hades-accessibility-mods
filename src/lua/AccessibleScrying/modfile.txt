@@ -1,0 +1,1 @@
+Import "AccessibleScrying.lua" to "Scripts/RoomManager.lua"
