@@ -35,13 +35,15 @@ scripts/          Build and code generation scripts
 
 ### Key Scripts
 
-| Script | Purpose |
-|--------|---------|
-| `generate_embedded_mods.py` | Reads all Lua source → generates `embedded_mods.cpp` |
-| `build.ps1` | Auto-detects Visual Studio, runs MSBuild |
-| `generate_language_files.py` | Generates `languages/{lang}.lua` from game text + manual translations |
-| `generate_ui_translations.py` | Generates UI string translation JSON files |
-| `parse_game_text.py` | Parses HelpText.en.sjson to update mod descriptions |
+| Script | Purpose | When to Run | Required? |
+|--------|---------|-------------|-----------|
+| `build.ps1` | Auto-detects Visual Studio, runs MSBuild | Every build | Yes — builds the DLL |
+| `generate_embedded_mods.py` | Reads all Lua mod source files from `src/lua/` and ModUtil from `src/modutil/`, generates `embedded_mods.cpp` with all mods as C++ raw string literals | After any Lua mod source change. Must run BEFORE `build.ps1`. | Yes — without this, the DLL has stale Lua code |
+| `generate_language_files.py` | Combines game HelpText SJSON translations + manual UI translations (from `ui_translations/` JSON files) into `languages/{lang}.lua` files for 10 languages | After changing any hardcoded description table, UIStrings, or manual translation JSON. Requires game installed (reads HelpText SJSON from game directory). | Only for non-English users. English text is embedded in the Lua mods. Without these files, non-English players see English. |
+| `generate_ui_translations.py` | Generates `ui_translations/{lang}.json` files containing manual translations for ~300 UI strings that don't exist in the game's HelpText (menu names, status labels, format strings, NPC names, etc.) | After adding new UIStrings entries or changing NPC/speaker name tables. Output is consumed by `generate_language_files.py`. | Only if you changed UI strings and need non-English support. Not needed at runtime — it feeds into `generate_language_files.py`. |
+| `generate_subtitles.py` | Parses the game's subtitle CSV files from `Content/Subtitles/{lang}/` into `subtitles/{lang}.lua` lookup tables (~13K entries per language) | Only needs to run once (or after a game update that changes subtitle data). Requires game installed. | Only for expanded subtitle reading. Without these files, subtitles still work for on-screen dialogue but end-of-conversation remarks and ambient voice lines are silent. |
+| `generate_chaos_dat.py` | Generates `chaos.dat` (8 KB gate file for debug keys, validated via SHA-256 hash baked into the DLL) | Only when building with `ENABLE_DEBUG_KEYS` defined. DLL and chaos.dat must be built together as a matched pair. | No — debug keys are a developer tool, disabled in public builds. |
+| `parse_game_text.py` | Parses `HelpText.en.sjson` to replace hardcoded descriptions in Lua mods with authoritative game text. Handles template variables (`{$Keywords.X}`, `{$TooltipData.X}`, etc.). | After adding new hardcoded descriptions or changing existing ones, to ensure they match the game's data. Run with `--apply` to update mod files in-place. | No — a developer tool. Descriptions are already baked into the Lua source. |
 
 ## Build & Deploy
 
@@ -50,6 +52,8 @@ scripts/          Build and code generation scripts
 3. **Output**: `x64/Release/xinput1_4.dll`
 4. **Deploy**: Copy DLL to `Steam\steamapps\common\Hades\x64\`. Game must be closed (DLL is locked while running).
 5. **Speech DLLs**: `Tolk.dll` and `nvdaControllerClient64.dll` must also be in the game's `x64/` directory (not in this repo; obtain from a release or the Tolk project).
+6. **Language files** (for non-English): `python scripts/generate_language_files.py`, then copy `languages/` folder to the game's `x64/` directory.
+7. **Subtitle files** (for expanded voice line subtitles): `python scripts/generate_subtitles.py`, then copy `subtitles/` folder to the game's `x64/` directory. Requires the game to be installed (reads CSV files from `Content/Subtitles/`).
 
 ## Architecture
 
@@ -117,6 +121,42 @@ Six game functions are wrapped via `lua_getglobal` → `luaL_ref` → `lua_pushc
 All 29 Lua mods + ModUtil v2.10.0 are compiled into the DLL as C++ raw string literals. No external `.lua` files needed. `generate_embedded_mods.py` generates `embedded_mods.cpp`. MSVC raw strings are chunked at 15000 bytes to avoid C2026.
 
 After a Lua state reset (room transitions, save loads), the bridge and all mods are automatically re-installed via periodic probing (every 50 pcallk calls).
+
+## Subtitle System
+
+Hades has two separate dialogue pathways:
+
+1. **`DisplayTextLine`** — shows text on screen with speaker portrait. The `line` parameter has `.Text` (localization key) and `.Cue` (audio path). Our Lua wrapper in AccessibleNotifications reads the text and speaks it. This covers all interactive NPC dialogue.
+
+2. **`PlayVoiceLine`** — plays audio-only voice cues. The `line` parameter has ONLY `.Cue` (e.g. `/VO/Hades_0721`) with NO `.Text` field. This covers end-of-conversation remarks (EndCue/EndVoiceLines in Narrative.lua), ambient barks, quips, and standalone voice reactions.
+
+### Why Lua Can't Resolve Voice Line Text
+
+`PlayVoiceLine` voice cues cannot be resolved to text purely from Lua. Three approaches were tried and all fail:
+
+1. **`GetDisplayName({Text = "Hades_0721"})`** — returns the key unchanged. Voice cue IDs are NOT localization keys. `GetDisplayName` only resolves keys that exist in the HelpText data; voice cue IDs are audio asset paths with no HelpText entries.
+
+2. **Reading `line.Text`** — the `line` table passed to `PlayVoiceLine` has only a `.Cue` field. There is no `.Text`, `.Speaker`, or any other text-carrying field. The game's voice line data structures in AudioData.lua are pure audio metadata (cue path, cooldowns, requirements, animations) with no dialogue text.
+
+3. **Looking up text from the parent dialogue system** — `PlayVoiceLine` is called independently from `DisplayTextLine`. End-of-conversation voice lines (EndCue/EndVoiceLines) fire AFTER the dialogue screen closes. There is no back-reference from the voice cue to the text line that preceded it, and EndCue lines are entirely separate dialogue entries with their own unique cue IDs.
+
+The text for these voice cues exists only in the game's subtitle CSV files at `Content/Subtitles/{lang}/*.csv`, which are read by the game's C++ audio/subtitle engine but never exposed to Lua. The solution is to parse these CSV files at build time into a Lua lookup table and load it at runtime from C++.
+
+### Subtitle Data Pipeline
+
+1. **`generate_subtitles.py`** parses all CSV files from `Content/Subtitles/{lang}/` (37 files per language, ~13K entries) into `subtitles/{lang}.lua` files. Each file defines a `SubtitleData` global table mapping cue IDs to text strings.
+
+2. **C++ `LoadSubtitleData()`** (debug.cpp) loads `x64/subtitles/{lang}.lua` at startup after language detection, with English fallback. Uses the same `luaL_loadbufferx` + `lua_pcallk` pattern as language file loading. Also reloads on Lua state reset (room transitions).
+
+3. **Lua `PlayVoiceLine` wrapper** (AccessibleNotifications.lua) looks up `SubtitleData[dialogueId]` for each voice cue. If text is found and subtitles are enabled (`_SubtitleReadingEnabled`), speaks "Speaker: text". Speaker determined from the `source` parameter or `CuePrefixToSpeaker` table (maps cue prefixes like `ZagreusField` → `Zagreus`, `Storyteller` → `Narrator`).
+
+### Key Details
+
+- **CSV format**: `Status,Prefix,Number,FullID,,,,Text,,,Notes`. Column index 3 = cue ID, column index 7 = text. "Unused" status lines are skipped.
+- **Deduplication**: 1-second cooldown on the same cue ID prevents double-speaking when both `DisplayTextLine` and `PlayVoiceLine` fire for the same dialogue line.
+- **Translation**: `CuePrefixToSpeaker` is in `_LocalizableTables` (ZLocalizationCore.lua) so speaker names are translated. The subtitle text itself comes from the game's own per-language CSV files, so it's automatically in the correct language.
+- **File sizes**: ~727 KB per language (English), ~13K entries each. All 11 languages total ~8.5 MB on disk.
+- **Without subtitle files**: The `PlayVoiceLine` wrapper silently skips (SubtitleData is nil/empty). Only `DisplayTextLine` subtitles work. No errors.
 
 ## Critical Conventions
 

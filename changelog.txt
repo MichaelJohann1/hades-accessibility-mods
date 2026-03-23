@@ -1,6 +1,7 @@
 Hades accessibility mods changelog
 
-This is the final release. The project is no longer being actively developed.
+*Version 35.1: Released 03/23/2026
+Expanded subtitle reading to cover voice lines that play outside of the main dialogue system, including end-of-conversation remarks, ambient barks, and other standalone voice cues. When subtitles are toggled on (backslash key), these voice lines are now spoken with the speaker's name and the dialogue text. This uses the game's own subtitle data files, so it works in all supported languages.
 
 *Version 35: Released 03/11/2026
 Added a damage feedback system with 3 modes, toggled with Shift+Backslash on keyboard or L3 (left stick click) on controller: Audible Healthbars (synthesized tone that descends in pitch as enemies lose health, with a distinct kill tone), Damage Dealt (speaks the damage amount like "50 health" or "Killed"), and Combined (both at once). Armor hits have a textured noise sound. Your preference is saved across sessions.

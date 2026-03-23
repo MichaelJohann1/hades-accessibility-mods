@@ -33,12 +33,14 @@
 <h3>Manual Installation</h3>
 <p>Download the latest mod release <a href="https://github.com/MichaelJohann1/hades-accessibility-mods/releases/latest">here</a>. Copy all the DLL files (xinput1_4.dll, Tolk.dll, nvdaControllerClient64.dll) to your Hades install folder's x64 directory. For example: C:\Program Files (x86)\Steam\steamapps\common\Hades\x64</p>
 <p>For non-English language support, also copy the languages folder from the release zip to the same x64 directory.</p>
+<p>For expanded subtitle reading (end-of-conversation remarks, ambient voice lines), also copy the subtitles folder to the same x64 directory.</p>
 
 <h2>Using the Mods</h2>
 <p>All in-game menus now have screen reader support through Tolk. When you navigate menus, items and descriptions will be spoken automatically by your screen reader.</p>
 
-<p>Press the backslash key (\) to toggle subtitle reading on or off. When enabled, all dialogue text will be spoken with the speaker's name (e.g. "Achilles: I hope you're well, lad.").</p>
+<p>Press the backslash key (\) to toggle subtitle reading on or off. When enabled, all dialogue text will be spoken with the speaker's name (e.g. "Achilles: I hope you're well, lad."). This includes end-of-conversation remarks, ambient barks, and other voice lines that play outside of the main dialogue system.</p>
 <p>Subtitles are off by default. Your preference is saved automatically and will persist across game sessions. If you turn subtitles on, they will stay on the next time you launch the game.</p>
+<p>For full subtitle coverage of voice lines, deploy the subtitles/ folder to the game's x64/ directory. Without this folder, only dialogue shown on screen will be spoken.</p>
 
 <p>The following menus are engine-level menus and are not accessible. These are not in-game menus and cannot be made accessible through modding:</p>
 <ul>
@@ -178,12 +180,17 @@ Alternatively, open hades.slnx in Visual Studio and build the Release x64 config
 <p>For non-English language support, also generate and copy the language files:</p>
 <pre>python scripts/generate_language_files.py</pre>
 <p>This creates a languages/ folder with translation files. Copy it to the same x64/ directory.</p>
+<p>For expanded subtitle reading, also generate and copy the subtitle files:</p>
+<pre>python scripts/generate_subtitles.py</pre>
+<p>This creates a subtitles/ folder with per-language subtitle data parsed from the game's CSV files. Copy it to the same x64/ directory. These files are needed because voice lines played outside the main dialogue system (end-of-conversation remarks, ambient barks) carry only an audio cue ID with no text data accessible from Lua. The subtitle text exists only in the game's CSV subtitle files, so this script extracts it into a format the mod can load at runtime.</p>
 
 <h3>Other Build Scripts</h3>
 <ul>
-<li>scripts/generate_language_files.py — generates languages/{lang}.lua files for 10 supported languages</li>
-<li>scripts/generate_ui_translations.py — generates UI string translation JSON files</li>
-<li>scripts/parse_game_text.py — parses game text data to update mod descriptions</li>
+<li><strong>scripts/generate_embedded_mods.py</strong> (required before every build) — reads all Lua mod source files and generates embedded_mods.cpp. You must run this after changing any Lua source before building the DLL, otherwise the DLL will contain stale mod code. This is required for both English and non-English builds.</li>
+<li><strong>scripts/generate_language_files.py</strong> (required for non-English) — generates languages/{lang}.lua files for 10 supported languages by combining game text translations with manual UI string translations. Without these files, non-English players see English text. Requires the game to be installed (reads HelpText SJSON from the game directory).</li>
+<li><strong>scripts/generate_ui_translations.py</strong> (developer tool) — generates the manual translation JSON files consumed by generate_language_files.py. Run this after adding or changing UI strings (menu names, labels, NPC names, etc.) that need translation. Not used at runtime.</li>
+<li><strong>scripts/generate_subtitles.py</strong> (optional, for expanded subtitles) — generates subtitles/{lang}.lua files from the game's subtitle CSV data. Without these files, subtitles still work for on-screen dialogue, but end-of-conversation remarks and ambient voice lines won't be spoken. Only needs to run once per game version. Requires the game to be installed.</li>
+<li><strong>scripts/parse_game_text.py</strong> (developer tool) — updates hardcoded boon/item descriptions in the Lua mods with authoritative game text from HelpText.en.sjson. Run this after adding new hardcoded descriptions or changing existing ones to ensure they match the game's data. Run with --apply to modify files in-place.</li>
 </ul>
 
 <h3>Debug Keys</h3>

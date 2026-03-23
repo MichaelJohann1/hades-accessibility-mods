@@ -37,13 +37,17 @@ Download the latest mod release [here](https://github.com/MichaelJohann1/hades-a
 
 For non-English language support, also copy the `languages` folder from the release zip to the same x64 directory.
 
+For expanded subtitle reading (end-of-conversation remarks, ambient voice lines), also copy the `subtitles` folder to the same x64 directory.
+
 ## Using the Mods
 
 All in-game menus now have screen reader support through Tolk. When you navigate menus, items and descriptions will be spoken automatically by your screen reader.
 
-Press the backslash key (\\) to toggle subtitle reading on or off. When enabled, all dialogue text will be spoken with the speaker's name (e.g. "Achilles: I hope you're well, lad.").
+Press the backslash key (\\) to toggle subtitle reading on or off. When enabled, all dialogue text will be spoken with the speaker's name (e.g. "Achilles: I hope you're well, lad."). This includes end-of-conversation remarks, ambient barks, and other voice lines that play outside of the main dialogue system.
 
 Subtitles are off by default. Your preference is saved automatically and will persist across game sessions. If you turn subtitles on, they will stay on the next time you launch the game.
+
+For full subtitle coverage of voice lines, deploy the `subtitles/` folder to the game's `x64/` directory. Without this folder, only dialogue shown on screen will be spoken.
 
 The following menus are engine-level menus and are not accessible. These are not in-game menus and cannot be made accessible through modding:
 
@@ -206,11 +210,19 @@ python scripts/generate_language_files.py
 ```
 This creates a `languages/` folder with translation files. Copy it to the same `x64/` directory.
 
+For expanded subtitle reading, also generate and copy the subtitle files:
+```
+python scripts/generate_subtitles.py
+```
+This creates a `subtitles/` folder with per-language subtitle data parsed from the game's CSV files. Copy it to the same `x64/` directory. These files are needed because voice lines played outside the main dialogue system (end-of-conversation remarks, ambient barks) carry only an audio cue ID with no text data accessible from Lua. The subtitle text exists only in the game's CSV subtitle files, so this script extracts it into a format the mod can load at runtime.
+
 ### Other Build Scripts
 
-- `scripts/generate_language_files.py` — generates `languages/{lang}.lua` files for 10 supported languages
-- `scripts/generate_ui_translations.py` — generates UI string translation JSON files
-- `scripts/parse_game_text.py` — parses game text data to update mod descriptions
+- **`scripts/generate_embedded_mods.py`** (required before every build) — reads all Lua mod source files and generates `embedded_mods.cpp`. You must run this after changing any Lua source before building the DLL, otherwise the DLL will contain stale mod code. This is required for both English and non-English builds.
+- **`scripts/generate_language_files.py`** (required for non-English) — generates `languages/{lang}.lua` files for 10 supported languages by combining game text translations with manual UI string translations. Requires the game to be installed.
+- **`scripts/generate_ui_translations.py`** (developer tool) — generates the manual translation JSON files consumed by `generate_language_files.py`. Run this after adding or changing UI strings (menu names, labels, NPC names, etc.) that need translation. Not used at runtime.
+- **`scripts/generate_subtitles.py`** (optional, for expanded subtitles) — generates `subtitles/{lang}.lua` files from the game's subtitle CSV data. Without these files, subtitles still work for on-screen dialogue, but end-of-conversation remarks and ambient voice lines won't be spoken. Only needs to run once per game version. Requires the game to be installed.
+- **`scripts/parse_game_text.py`** (developer tool) — updates hardcoded boon/item descriptions in the Lua mods with authoritative game text from HelpText.en.sjson. Run this after adding new hardcoded descriptions or changing existing ones to ensure they match the game's data.
 
 ### Debug Keys
 
