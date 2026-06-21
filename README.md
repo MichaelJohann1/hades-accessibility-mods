@@ -49,12 +49,14 @@ Subtitles are off by default. Your preference is saved automatically and will pe
 
 For full subtitle coverage of voice lines, deploy the `subtitles/` folder to the game's `x64/` directory. Without this folder, only dialogue shown on screen will be spoken.
 
-The following menus are engine-level menus and are not accessible. These are not in-game menus and cannot be made accessible through modding:
+The following are the game's engine-level menus. As of version 36 they have **partial** screen reader support through Tolk: as you navigate, each item is spoken — including relabeled settings like God Mode, save profile slots, and control bindings paired with their action names. Some values are not yet spoken — exact slider percentages, toggle on/off states, and gamepad/mouse binding icons — so the navigation guide below is still recommended:
 
 - Main Menu / Title Screen
 - Pause Menu
 - Settings Menu
+- Controls / Key Bindings
 - Save File Select
+- Confirmation dialogs (the prompt is read aloud)
 
 For a guide on navigating these menus, click [here](https://blackscreengaming.com/hades/menus/index.php). If you are new to Hades, it is highly recommended that you read this guide before starting the game.
 
@@ -223,17 +225,13 @@ This creates a `subtitles/` folder with per-language subtitle data parsed from t
 - **`scripts/generate_ui_translations.py`** (developer tool) — generates the manual translation JSON files consumed by `generate_language_files.py`. Run this after adding or changing UI strings (menu names, labels, NPC names, etc.) that need translation. Not used at runtime.
 - **`scripts/generate_subtitles.py`** (optional, for expanded subtitles) — generates `subtitles/{lang}.lua` files from the game's subtitle CSV data. Without these files, subtitles still work for on-screen dialogue, but end-of-conversation remarks and ambient voice lines won't be spoken. Only needs to run once per game version. Requires the game to be installed.
 - **`scripts/parse_game_text.py`** (developer tool) — updates hardcoded boon/item descriptions in the Lua mods with authoritative game text from HelpText.en.sjson. Run this after adding new hardcoded descriptions or changing existing ones to ensure they match the game's data.
+- **`scripts/generate_helptext.py`** (developer tool, for the engine-level menus) — generates `src/cpp/embedded_helptext.cpp`, a compact id→on-screen-text map parsed from the game's `HelpText.en.sjson`. The native engine-menu reader uses it to resolve settings whose displayed wording differs from their internal name (e.g. the "God Mode" toggle). The generated file is checked in, so this only needs to run when the game's menu text changes. Requires the game to be installed.
 
 ### Debug Keys
 
 Debug keys are developer tools for spawning boons, items, and triggering game events during testing. They are **disabled by default** in public builds.
 
-To enable them, you must:
-
-1. **Build with `ENABLE_DEBUG_KEYS` defined** — add `/D ENABLE_DEBUG_KEYS` to your MSBuild command or define it in the Visual Studio project settings.
-2. **Generate `chaos.dat`** — run `python scripts/generate_chaos_dat.py`. This creates an 8 KB gate file validated via SHA-256 hash at runtime. Place it in the game's `x64/` directory alongside the DLL. The hash is baked into the DLL at compile time, so the DLL and `chaos.dat` must be built together as a matched pair.
-
-Without both of these, debug key code is excluded from the DLL entirely.
+To make a debug build, run **`scripts/build-debug.ps1`**. It generates a matched `chaos.dat` + `chaos_hash.h` (the SHA-256 is baked into the DLL automatically — no manual paste) and builds the DLL with `ENABLE_DEBUG_KEYS` defined. Deploy **both** the built `xinput1_4.dll` and `chaos.dat` to the game's `x64/` directory — they are a matched pair, and without `chaos.dat` the debug keys stay silently disabled.
 
 See [DEBUG_KEYS.md](DEBUG_KEYS.md) for the full list of debug key bindings.
 

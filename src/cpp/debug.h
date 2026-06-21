@@ -63,6 +63,11 @@ void BackupEnglishTables(lua_State* L);
 // Get the current language code (e.g. "en", "fr", "de").
 const char* GetCurrentLanguage();
 
+// Load subtitle data from x64/subtitles/{lang}.lua.
+// Sets the global SubtitleData table in Lua.
+// Call after bridge registration + mod loading (and after Lua state resets).
+void LoadSubtitleData(lua_State* L);
+
 // Keyboard input source detection for accessibility TraitTray navigation.
 // NOT gated by chaos.dat — always available.
 bool IsArrowKeyDown();

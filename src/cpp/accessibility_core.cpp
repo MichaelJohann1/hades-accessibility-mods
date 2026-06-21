@@ -9,6 +9,7 @@
 #include "embedded_mods.h"
 #include "debug.h"
 #include "audio_feedback.h"
+#include "engine_menu.h"
 #include "version.h"
 #include <cstdio>
 #include <atomic>
@@ -316,6 +317,11 @@ DWORD WINAPI WorkerThread(LPVOID)
         return 0;
     }
 
+    // Phase 1b: Narrate the engine-level menus (Title/Main, Pause, Settings,
+    // Controls, Save Select, dialogs) by resolving their MenuScreen classes via
+    // RTTI and hooking each one's Update. Logs to [ENGINE-MENU].
+    EngineMenu::Init();
+
     // Phase 2: Wait for game to initialize
     Sleep(3000);
 
@@ -461,6 +467,9 @@ DWORD WINAPI WorkerThread(LPVOID)
 
             // Load saved language (or auto-detect) and apply language file
             Debug::LoadLanguageState(L);
+
+            // Load subtitle data from subtitles/{lang}.lua
+            Debug::LoadSubtitleData(L);
 
             if (TolkLoader::IsAvailable()) {
                 TolkLoader::Output(L"Mods ready", true);

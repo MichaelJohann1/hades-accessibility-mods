@@ -4,13 +4,12 @@ Debug keys are developer tools for testing accessibility mods. They are disabled
 
 ## Enabling Debug Keys
 
-Debug keys require two things:
+Debug keys are excluded from public release builds. To make a debug build:
 
-1. **Build with `ENABLE_DEBUG_KEYS` defined** — add `/D ENABLE_DEBUG_KEYS` to your MSBuild command or define it in the project settings. Public release builds do NOT define this flag, so debug key code is excluded from the DLL entirely.
+1. Run **`scripts/build-debug.ps1`**. It generates a matched `chaos.dat` + `chaos_hash.h` (the SHA-256 is baked into the DLL automatically — no manual editing of `debug.cpp`), then builds the DLL with `ENABLE_DEBUG_KEYS` defined.
+2. Deploy **both** the built `xinput1_4.dll` **and** `chaos.dat` to the game's `x64/` directory. They are a matched pair: the DLL only enables debug keys when the exact `chaos.dat` it was built against is present.
 
-2. **Generate and deploy `chaos.dat`** — run `python scripts/generate_chaos_dat.py` from the repo root. This creates a `chaos.dat` file (8 KB) that must be placed in the game's `x64/` directory alongside the DLL. The file contains a random key validated via SHA-256 hash at runtime. The hash is baked into the DLL at compile time, so the DLL and `chaos.dat` must be a matched pair — regenerating `chaos.dat` requires rebuilding the DLL.
-
-Without both of these, debug keys are silently disabled.
+Without `chaos.dat` next to the DLL, debug keys stay silently disabled. `build-debug.ps1` regenerates `chaos.dat` if it's missing.
 
 ## Key Bindings
 

@@ -170,25 +170,6 @@ ModUtil.WrapBaseFunction("DamageEnemy", function(baseFunc, victim, triggerArgs)
         _enemyMaxArmor[victim.ObjectId] = nil
     end
 
-    -- Encounter completion sound: check if no required-kill enemies remain
-    -- After baseFunc (DamageEnemy) returns, Kill() has already removed the dead enemy
-    -- from RequiredKillEnemies. If the table is now empty, the encounter is cleared.
-    if killed and _DamageFeedbackMode and _DamageFeedbackMode > 0 then
-        pcall(function()
-            if RequiredKillEnemies then
-                local hasRemaining = false
-                for _ in pairs(RequiredKillEnemies) do
-                    hasRemaining = true
-                    break
-                end
-                if not hasRemaining then
-                    PlaySound({ Name = "/SFX/Menu Sounds/GodBoonInteract" })
-                    _Log("Encounter clear sound played")
-                end
-            end
-        end)
-    end
-
     return result
 end)
 

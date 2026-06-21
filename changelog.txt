@@ -1,5 +1,9 @@
 Hades accessibility mods changelog
 
+*Version 36: Released 06/20/2026
+Added partial screen reader support for the game's engine-level menus (Main Menu, Pause, Settings, Controls, Save File Select, and confirmation dialogs), which previously could not be read at all. As you navigate, each item is spoken through Tolk, including relabeled settings such as God Mode, save profile slots, and control bindings paired with their action names (e.g. "Special, Q"). Confirmation dialog prompts are read aloud when they appear. Sliders and settings toggles announce their control type so you know whether to adjust or press them. Not yet read: exact slider percentages, toggle on/off states, and gamepad/mouse binding icons. This is implemented in the native DLL by reading the engine's menu screens directly, since these menus are not built with Lua and cannot be reached by the mod scripts.
+Removed the sound that played when all enemies in a room were defeated (added in version 35).
+
 *Version 35.1: Released 03/23/2026
 Expanded subtitle reading to cover voice lines that play outside of the main dialogue system, including end-of-conversation remarks, ambient barks, and other standalone voice cues. When subtitles are toggled on (backslash key), these voice lines are now spoken with the speaker's name and the dialogue text. This uses the game's own subtitle data files, so it works in all supported languages.
 

@@ -17,8 +17,9 @@ Release/
 src/cpp/embedded_mods.cpp
 src/cpp/version.h
 
-# Debug key gate file
+# Debug key gate file + its generated hash (made by build-debug.ps1, debug builds only)
 chaos.dat
+src/cpp/chaos_hash.h
 
 # Binary DLLs (distributed via GitHub Releases only)
 *.dll

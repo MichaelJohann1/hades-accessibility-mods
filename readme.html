@@ -42,12 +42,14 @@
 <p>Subtitles are off by default. Your preference is saved automatically and will persist across game sessions. If you turn subtitles on, they will stay on the next time you launch the game.</p>
 <p>For full subtitle coverage of voice lines, deploy the subtitles/ folder to the game's x64/ directory. Without this folder, only dialogue shown on screen will be spoken.</p>
 
-<p>The following menus are engine-level menus and are not accessible. These are not in-game menus and cannot be made accessible through modding:</p>
+<p>The following are the game's engine-level menus. As of version 36 they have <strong>partial</strong> screen reader support through Tolk: as you navigate, each item is spoken &mdash; including relabeled settings like God Mode, save profile slots, and control bindings paired with their action names. Some values are not yet spoken &mdash; exact slider percentages, toggle on/off states, and gamepad/mouse binding icons &mdash; so the navigation guide below is still recommended:</p>
 <ul>
 <li>Main Menu / Title Screen</li>
 <li>Pause Menu</li>
 <li>Settings Menu</li>
+<li>Controls / Key Bindings</li>
 <li>Save File Select</li>
+<li>Confirmation dialogs (the prompt is read aloud)</li>
 </ul>
 <p>For a guide on navigating these menus, click <a href="https://blackscreengaming.com/hades/menus/index.php">here</a>. If you are new to Hades, it is highly recommended that you read this guide before starting the game.</p>
 
@@ -195,12 +197,7 @@ Alternatively, open hades.slnx in Visual Studio and build the Release x64 config
 
 <h3>Debug Keys</h3>
 <p>Debug keys are developer tools for spawning boons, items, and triggering game events during testing. They are <strong>disabled by default</strong> in public builds.</p>
-<p>To enable them, you must:</p>
-<ol>
-<li><strong>Build with ENABLE_DEBUG_KEYS defined</strong> — add /D ENABLE_DEBUG_KEYS to your MSBuild command or define it in the Visual Studio project settings.</li>
-<li><strong>Generate chaos.dat</strong> — run <code>python scripts/generate_chaos_dat.py</code>. This creates an 8 KB gate file validated via SHA-256 hash at runtime. Place it in the game's x64/ directory alongside the DLL. The hash is baked into the DLL at compile time, so the DLL and chaos.dat must be built together as a matched pair.</li>
-</ol>
-<p>Without both of these, debug key code is excluded from the DLL entirely.</p>
+<p>To make a debug build, run <code>scripts/build-debug.ps1</code>. It generates a matched chaos.dat + chaos_hash.h (the SHA-256 is baked into the DLL automatically — no manual paste) and builds the DLL with ENABLE_DEBUG_KEYS defined. Deploy <strong>both</strong> the built xinput1_4.dll and chaos.dat to the game's x64/ directory — they are a matched pair, and without chaos.dat the debug keys stay silently disabled.</p>
 <p>See DEBUG_KEYS.md in the repository for the full list of debug key bindings.</p>
 
 <h3>Using Claude</h3>
