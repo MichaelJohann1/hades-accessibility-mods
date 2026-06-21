@@ -1,7 +1,7 @@
 --[[
 Mod: DebugKeys
 Author: Accessibility Layer
-Version: 3
+Version: 4
 
 Handles debug key spawning during development/testing.
 The C++ DLL (debug.cpp) detects key presses and sets Lua global flags.
@@ -22,6 +22,7 @@ Key mapping (set by C++ CheckDebugKeys):
   8:      Enable flashback 2 (sets AllowFlashback + Flashback_Mother_01 prereq, use bed to trigger)
   9:      Spawn fishing point in current room
   0:      Spawn healing fountain
+  ]:      Grant all 6 companions (Megaera/Achilles/Thanatos/Sisyphus/Skelly/Dusa) at level 1; each press raises them one level (cap 5), for testing keepsake-case level text
 --]]
 
 -- God boon spawn config: flag name -> loot name
@@ -280,6 +281,43 @@ thread(function()
                 end)
                 spawnMsg = spawnMsg .. ", Adamant Rail maxed, 1 billion health"
             end
+            if AccessibilityEnabled and AccessibilityEnabled() then
+                TolkSpeak(spawnMsg)
+            end
+        end
+
+        -- ] key: grant all 6 companions; first press = level 1, each press +1 (cap 5)
+        if _DebugGrantCompanions then
+            _DebugGrantCompanions = nil
+            local spawnMsg = "Companion grant error"
+            pcall(function()
+                if not GameState then
+                    spawnMsg = "GameState not ready"
+                    return
+                end
+                GameState.Gift = GameState.Gift or {}
+                GameState.AssistUnlocks = GameState.AssistUnlocks or {}
+                -- companion trait -> the NPC whose gift slot 7 grants it
+                local companions = {
+                    { trait = "FuryAssistTrait",              npc = "NPC_FurySister_01" },
+                    { trait = "AchillesPatroclusAssistTrait", npc = "NPC_Achilles_01"   },
+                    { trait = "ThanatosAssistTrait",          npc = "NPC_Thanatos_01"   },
+                    { trait = "SisyphusAssistTrait",          npc = "NPC_Sisyphus_01"   },
+                    { trait = "SkellyAssistTrait",            npc = "NPC_Skelly_01"     },
+                    { trait = "DusaAssistTrait",              npc = "NPC_Dusa_01"       },
+                }
+                -- AssistUnlocks value N -> keepsake level N+1. First press grants at 0
+                -- (level 1); each later press raises everyone one level, capped at 4 (level 5).
+                local cur = GameState.AssistUnlocks[companions[1].trait]
+                local newVal = (cur == nil) and 0 or math.min(cur + 1, 4)
+                for _, c in ipairs(companions) do
+                    -- gift level >= 7 makes the slot-7 companion show unlocked in the case
+                    GameState.Gift[c.npc] = GameState.Gift[c.npc] or {}
+                    GameState.Gift[c.npc].Value = 9
+                    GameState.AssistUnlocks[c.trait] = newVal
+                end
+                spawnMsg = "All companions set to level " .. (newVal + 1)
+            end)
             if AccessibilityEnabled and AccessibilityEnabled() then
                 TolkSpeak(spawnMsg)
             end

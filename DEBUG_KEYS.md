@@ -45,6 +45,12 @@ Without `chaos.dat` next to the DLL, debug keys stay silently disabled. `build-d
 | 8 | Trigger flashback 2 (same as 7 + sets Mother_01 prerequisite) |
 | 9 | Spawn fishing point in current room |
 
+### Other Keys
+
+| Key | Action |
+|-----|--------|
+| `]` | Grant all 6 companions (Megaera, Achilles, Thanatos, Sisyphus, Skelly, Dusa). First press sets them to level 1; each subsequent press raises every companion one level (cap 5). For testing the keepsake-case level text. |
+
 ### Notes
 
 - Debug keys use edge detection — press and release to trigger; holding does not repeat.

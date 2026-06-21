@@ -108,6 +108,7 @@ static const DebugKeyEntry s_debugKeys[] = {
     { 0x38,   "_DebugFlashback2",     "Flashback2"},  // Number key 8
     { 0x39,   "_DebugSpawnFish",     "Fish"      },  // Number key 9
     { 0x30,   "_DebugSpawnFountain", "Fountain"  },  // Number key 0
+    { VK_OEM_6, "_DebugGrantCompanions", "Companions" },  // ] key: grant + level all companions (test keepsake level text)
 };
 static const int s_debugKeyCount = sizeof(s_debugKeys) / sizeof(s_debugKeys[0]);
 static bool s_wasDown[32] = {};

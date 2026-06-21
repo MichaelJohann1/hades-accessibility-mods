@@ -23,7 +23,6 @@ OUTPUT_DIR = os.path.join(SCRIPT_DIR, "subtitles")
 # Try to find the game's Subtitles directory
 GAME_PATHS = [
     r"C:\Program Files (x86)\Steam\steamapps\common\Hades\Content\Subtitles",
-    r"D:\Steam\steamapps\common\Hades\Content\Subtitles",
     r"C:\Steam\steamapps\common\Hades\Content\Subtitles",
 ]
 
