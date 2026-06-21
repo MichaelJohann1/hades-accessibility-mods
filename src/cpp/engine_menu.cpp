@@ -641,13 +641,14 @@ void OnAnyMenuUpdate(void* self)
             }
         }
 
-        // Exact slider values / toggle states aren't reliably stored on the
-        // component, so at least announce the control TYPE so the player knows
-        // how to interact: sliders are adjusted (left/right), buttons are pressed.
+        // Toggle on/off state isn't reliably stored on the component, so at least
+        // announce the control TYPE so the player knows how to interact: sliders
+        // are adjusted (left/right), toggles are pressed. On the Settings screen
+        // the interactive GUIComponentButtons are settings toggles.
         if (label[0]) {
             const char* type = nullptr;
             if (ClassIs(sel, "GUIComponentSlider")) type = "slider";
-            else if (friendly && strcmp(friendly, "Settings") == 0 && ClassIs(sel, "GUIComponentButton")) type = "button";
+            else if (friendly && strcmp(friendly, "Settings") == 0 && ClassIs(sel, "GUIComponentButton")) type = "toggle";
             if (type) { char buf[240]; snprintf(buf, sizeof(buf), "%s, %s", label, type); strncpy_s(label, sizeof(label), buf, _TRUNCATE); }
         }
 

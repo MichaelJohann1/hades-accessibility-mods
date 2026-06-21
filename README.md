@@ -49,7 +49,7 @@ Subtitles are off by default. Your preference is saved automatically and will pe
 
 For full subtitle coverage of voice lines, deploy the `subtitles/` folder to the game's `x64/` directory. Without this folder, only dialogue shown on screen will be spoken.
 
-The following are the game's engine-level menus. As of version 36 they have **partial** screen reader support through Tolk: as you navigate, each item is spoken — including relabeled settings like God Mode, save profile slots, and control bindings paired with their action names. Some values are not yet spoken — exact slider percentages, toggle on/off states, and gamepad/mouse binding icons — so the navigation guide below is still recommended:
+The following are the game's engine-level menus. As of version 36 they have screen reader support through Tolk: as you navigate, each item is spoken — including relabeled settings like God Mode, save profile slots, and control bindings paired with their action names. Each control's type is announced too, so you know how to interact with it — sliders are announced as "slider" and toggles as "toggle". Toggles don't speak their on or off state, but the game plays a distinct sound for on and for off, so you can tell which is which. The navigation guide below is still recommended:
 
 - Main Menu / Title Screen
 - Pause Menu
