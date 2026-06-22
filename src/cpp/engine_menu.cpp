@@ -498,6 +498,39 @@ bool ReadSliderPercent(void* comp, char* out, size_t outsz)
     return true;
 }
 
+// The Settings/Display screens host real on/off TOGGLES alongside sliders,
+// multi-value selectors (Resolution, Language), navigation buttons (Controls,
+// Display) and one-shot actions (Reset, OK, Cancel) — all GUIComponentButton
+// except the sliders. Only genuine on/off toggles should be announced as
+// "toggle". They can't be told apart by class, so match the component name
+// (comp+0x90) against the engine's stable toggle ids (internal, not localized).
+bool IsToggleComponent(void* comp)
+{
+    char name[80];
+    if (!SafeReadBytes(name, reinterpret_cast<uint8_t*>(comp) + 0x90, sizeof(name) - 1)) return false;
+    name[sizeof(name) - 1] = 0;
+    static const char* kToggleNames[] = {
+        "EasyModeButton",         // God Mode
+        "HardModeButton",         // Hell Mode
+        "SubtitlesButton",
+        "VibrationButton",
+        "GameplayTimerButton",    // Timer Display
+        "DamageNumbersButton",
+        "CameraShakeButton",      // Screen Shake
+        "AltCursorButton",        // Bright Cursor
+        "InputLockButton",        // Mouse Lock
+        "AnalyticsButton",        // Transmit Data
+        "AllowStrafeButton",      // Attack at Cursor
+        "BlinkKeyboardAimButton", // Dash at Cursor
+        "AllowAutoLockButton",    // Aim Assist
+        "VSyncButton",
+        "FullScreenButton",
+        "NoBorderButton",         // Borderless
+    };
+    for (const char* t : kToggleNames) if (strcmp(name, t) == 0) return true;
+    return false;
+}
+
 // ============================================================
 // The set of engine menus to narrate (every MenuScreen-derived class except the
 // in-game HUD). Re-derive after a game patch with re-tools/engine_menu_classes.py.
@@ -643,12 +676,13 @@ void OnAnyMenuUpdate(void* self)
 
         // Toggle on/off state isn't reliably stored on the component, so at least
         // announce the control TYPE so the player knows how to interact: sliders
-        // are adjusted (left/right), toggles are pressed. On the Settings screen
-        // the interactive GUIComponentButtons are settings toggles.
+        // are adjusted (left/right), toggles are pressed. Only genuine on/off
+        // toggles get the suffix (IsToggleComponent) — selectors, navigation and
+        // action buttons keep just their label.
         if (label[0]) {
             const char* type = nullptr;
             if (ClassIs(sel, "GUIComponentSlider")) type = "slider";
-            else if (friendly && strcmp(friendly, "Settings") == 0 && ClassIs(sel, "GUIComponentButton")) type = "toggle";
+            else if (ClassIs(sel, "GUIComponentButton") && IsToggleComponent(sel)) type = "toggle";
             if (type) { char buf[240]; snprintf(buf, sizeof(buf), "%s, %s", label, type); strncpy_s(label, sizeof(label), buf, _TRUNCATE); }
         }
 
