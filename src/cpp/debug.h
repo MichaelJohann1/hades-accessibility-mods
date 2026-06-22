@@ -7,7 +7,7 @@ typedef struct lua_State lua_State;
 namespace Debug {
 
 #ifdef ENABLE_DEBUG_KEYS
-// Validate chaos.dat gate file (SHA-256 hash check).
+// Check for the chaos.dat gate file next to the DLL (presence only, no hash).
 // Can be called early during startup (before Lua is available).
 // Returns true if debug keys are enabled. Result is cached.
 bool ValidateGateFile();

@@ -6,10 +6,10 @@ Debug keys are developer tools for testing accessibility mods. They are disabled
 
 Debug keys are excluded from public release builds. To make a debug build:
 
-1. Run **`scripts/build-debug.ps1`**. It generates a matched `chaos.dat` + `chaos_hash.h` (the SHA-256 is baked into the DLL automatically — no manual editing of `debug.cpp`), then builds the DLL with `ENABLE_DEBUG_KEYS` defined.
-2. Deploy **both** the built `xinput1_4.dll` **and** `chaos.dat` to the game's `x64/` directory. They are a matched pair: the DLL only enables debug keys when the exact `chaos.dat` it was built against is present.
+1. Run **`scripts/build-debug.ps1`**. It creates a `chaos.dat` gate file (if one isn't already present), then builds the DLL with `ENABLE_DEBUG_KEYS` defined.
+2. Deploy **both** the built `xinput1_4.dll` **and** `chaos.dat` to the game's `x64/` directory.
 
-Without `chaos.dat` next to the DLL, debug keys stay silently disabled. `build-debug.ps1` regenerates `chaos.dat` if it's missing.
+Debug keys turn on simply when `chaos.dat` is present next to the DLL — there is no hash or content check, so any file named `chaos.dat` works. Deleting it turns the debug keys off again. (Public release builds are compiled without `ENABLE_DEBUG_KEYS`, so a normal DLL has no debug keys regardless of whether `chaos.dat` is present.)
 
 ## Key Bindings
 

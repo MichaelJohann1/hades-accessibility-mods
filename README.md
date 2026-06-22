@@ -231,7 +231,7 @@ This creates a `subtitles/` folder with per-language subtitle data parsed from t
 
 Debug keys are developer tools for spawning boons, items, and triggering game events during testing. They are **disabled by default** in public builds.
 
-To make a debug build, run **`scripts/build-debug.ps1`**. It generates a matched `chaos.dat` + `chaos_hash.h` (the SHA-256 is baked into the DLL automatically — no manual paste) and builds the DLL with `ENABLE_DEBUG_KEYS` defined. Deploy **both** the built `xinput1_4.dll` and `chaos.dat` to the game's `x64/` directory — they are a matched pair, and without `chaos.dat` the debug keys stay silently disabled.
+To make a debug build, run **`scripts/build-debug.ps1`**. It creates a `chaos.dat` gate file (if one isn't already present) and builds the DLL with `ENABLE_DEBUG_KEYS` defined. Deploy **both** the built `xinput1_4.dll` and `chaos.dat` to the game's `x64/` directory. Debug keys turn on simply when `chaos.dat` is present next to the DLL — there is no hash or content check — and deleting `chaos.dat` turns them off again. (Public release builds are compiled without `ENABLE_DEBUG_KEYS`, so a normal DLL has no debug keys regardless of whether `chaos.dat` is present.)
 
 See [DEBUG_KEYS.md](DEBUG_KEYS.md) for the full list of debug key bindings.
 

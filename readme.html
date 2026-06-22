@@ -197,7 +197,7 @@ Alternatively, open hades.slnx in Visual Studio and build the Release x64 config
 
 <h3>Debug Keys</h3>
 <p>Debug keys are developer tools for spawning boons, items, and triggering game events during testing. They are <strong>disabled by default</strong> in public builds.</p>
-<p>To make a debug build, run <code>scripts/build-debug.ps1</code>. It generates a matched chaos.dat + chaos_hash.h (the SHA-256 is baked into the DLL automatically — no manual paste) and builds the DLL with ENABLE_DEBUG_KEYS defined. Deploy <strong>both</strong> the built xinput1_4.dll and chaos.dat to the game's x64/ directory — they are a matched pair, and without chaos.dat the debug keys stay silently disabled.</p>
+<p>To make a debug build, run <code>scripts/build-debug.ps1</code>. It creates a chaos.dat gate file (if one isn't already present) and builds the DLL with ENABLE_DEBUG_KEYS defined. Deploy <strong>both</strong> the built xinput1_4.dll and chaos.dat to the game's x64/ directory. Debug keys turn on simply when chaos.dat is present next to the DLL — there is no hash or content check — and deleting chaos.dat turns them off again. (Public release builds are compiled without ENABLE_DEBUG_KEYS, so a normal DLL has no debug keys regardless of whether chaos.dat is present.)</p>
 <p>See DEBUG_KEYS.md in the repository for the full list of debug key bindings.</p>
 
 <h3>Using Claude</h3>
