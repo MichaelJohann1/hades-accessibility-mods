@@ -1080,6 +1080,37 @@ local function BuildConsumableSpeech(button)
 end
 
 -- Main speech builder — dispatches based on button type
+-- Status curse definitions. The game shows these as keyword tooltips when you
+-- hover a boon; those render in C++ and can't be read from Lua, so we append a
+-- short definition inline whenever a boon names the effect. Specific durations
+-- and percentages vary per source and aren't resolvable here, so the definitions
+-- describe the mechanic without the exact numbers.
+StatusEffectDescriptions = {
+    { "Doom",        "Doom: after a brief delay, the victim takes a burst of damage." },
+    { "Hangover",    "Hangover: the victim keeps taking damage over time, stacking several times." },
+    { "Weak",        "Weak: the victim deals less damage for a few seconds." },
+    { "Deep Freeze", "Deep Freeze: at maximum Chill, the victim is frozen solid for a moment." },
+    { "Chill",       "Chill: the victim is slowed; the effect stacks, and at maximum freezes the victim solid." },
+    { "Jolted",      "Jolted: the victim's next attack self-inflicts lightning that also harms nearby foes." },
+    { "Charm",       "Charm: for a short time, the victim fights on your side." },
+    { "Rupture",     "Rupture: the victim takes damage while it moves." },
+    { "Exposed",     "Exposed: the victim takes more damage when struck from behind." },
+}
+
+-- Append a definition for each status curse named in the boon's speech (once
+-- each, in table order). Scans only the original speech, so appended text isn't
+-- re-scanned.
+function _AppendStatusEffects(speech)
+    if not speech or speech == "" then return speech end
+    local added = ""
+    for _, e in ipairs(StatusEffectDescriptions) do
+        if speech:find(e[1], 1, true) then
+            added = added .. " " .. e[2]
+        end
+    end
+    return speech .. added
+end
+
 local function BuildBoonSpeech(button)
     if not button or not button.Data then
         return nil
@@ -1087,14 +1118,18 @@ local function BuildBoonSpeech(button)
 
     local buttonType = button.Type
 
+    local speech
     if buttonType == "TransformingTrait" then
-        return BuildChaosSpeech(button)
+        speech = BuildChaosSpeech(button)
     elseif buttonType == "Consumable" then
-        return BuildConsumableSpeech(button)
+        speech = BuildConsumableSpeech(button)
     else
         -- "Trait" type covers both god boons and hammer upgrades
-        return BuildTraitSpeech(button)
+        speech = BuildTraitSpeech(button)
     end
+
+    -- Explain any status curses the boon names (Doom, Hangover, Chill, ...).
+    return _AppendStatusEffects(speech)
 end
 
 -- Mouse over handler for boon selection buttons
