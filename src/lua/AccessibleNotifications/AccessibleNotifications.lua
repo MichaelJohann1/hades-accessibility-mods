@@ -1,7 +1,7 @@
 --[[
 Mod: AccessibleNotifications
 Author: Accessibility Layer
-Version: 8
+Version: 9
 
 Speaks on-screen notifications that aren't handled by other accessibility mods:
 - Subtitle reading (toggled by backslash key, off by default; speaks "Speaker: text")
@@ -482,6 +482,140 @@ ModUtil.WrapBaseFunction("DisplayTextLine", function(baseFunc, screen, source, l
 end)
 
 --------------------------------------------------------------
+-- 1b) Voice Line Subtitles (PlayVoiceLine wrapper)
+-- Catches voice lines NOT displayed via DisplayTextLine:
+--   - End-of-conversation remarks (EndCue, EndVoiceLines, EndGlobalVoiceLines)
+--   - Ambient barks, quips, and other standalone voice cues
+-- Gated behind _SubtitleReadingEnabled (same toggle as DisplayTextLine subtitles).
+-- Only speaks lines whose Cue resolves to actual display text via GetDisplayName.
+--------------------------------------------------------------
+
+-- Map voice cue prefixes to speaker display names.
+-- Cue format: "/VO/{SpeakerPrefix}_{Number}" e.g. "/VO/ZagreusField_2378"
+CuePrefixToSpeaker = {
+    -- Zagreus (many context prefixes)
+    ["ZagreusField"] = "Zagreus",
+    ["ZagreusHome"] = "Zagreus",
+    ["Zagreus"] = "Zagreus",
+    -- House NPCs
+    ["Hades"] = "Hades",
+    ["Cerberus"] = "Cerberus",
+    ["Achilles"] = "Achilles",
+    ["Nyx"] = "Nyx",
+    ["Thanatos"] = "Thanatos",
+    ["Charon"] = "Charon",
+    ["Hypnos"] = "Hypnos",
+    ["Megaera"] = "Megaera",
+    ["Orpheus"] = "Orpheus",
+    ["Dusa"] = "Dusa",
+    ["Skelly"] = "Skelly",
+    -- Run NPCs
+    ["Sisyphus"] = "Sisyphus",
+    ["Eurydice"] = "Eurydice",
+    ["Patroclus"] = "Patroclus",
+    ["Bouldy"] = "Bouldy",
+    ["Persephone"] = "Persephone",
+    -- Fury Sisters
+    ["Alecto"] = "Alecto",
+    ["Tisiphone"] = "Tisiphone",
+    -- Bosses
+    ["Theseus"] = "Theseus",
+    ["Asterius"] = "Asterius",
+    -- Gods
+    ["Zeus"] = "Zeus",
+    ["Poseidon"] = "Poseidon",
+    ["Athena"] = "Athena",
+    ["Ares"] = "Ares",
+    ["Aphrodite"] = "Aphrodite",
+    ["Artemis"] = "Artemis",
+    ["Dionysus"] = "Dionysus",
+    ["Hermes"] = "Hermes",
+    ["Demeter"] = "Demeter",
+    ["Chaos"] = "Chaos",
+    -- Narrator
+    ["Storyteller"] = "Narrator",
+}
+
+-- Extract speaker name from a voice cue path.
+-- e.g. "/VO/ZagreusField_2378" -> "Zagreus"
+local function GetSpeakerFromCue(cue)
+    if not cue or cue == "" then return "" end
+    -- Strip "/VO/" prefix
+    local id = cue:gsub("^/VO/", "")
+    -- Try longest prefix match first (e.g. "ZagreusField" before "Zagreus")
+    -- Extract everything before the last underscore+digits
+    local prefix = id:match("^(.-)_%d+$")
+    if prefix and CuePrefixToSpeaker[prefix] then
+        return CuePrefixToSpeaker[prefix]
+    end
+    -- Try just the first word (before first underscore)
+    local firstWord = id:match("^([^_]+)")
+    if firstWord and CuePrefixToSpeaker[firstWord] then
+        return CuePrefixToSpeaker[firstWord]
+    end
+    return ""
+end
+
+-- Cooldown to avoid double-speaking lines that DisplayTextLine already caught
+local _lastSubtitleCue = ""
+local _lastSubtitleTime = 0
+
+ModUtil.WrapBaseFunction("PlayVoiceLine", function(baseFunc, line, prevLine, parentLine, source, args)
+    if _SubtitleReadingEnabled and line and line.Cue and line.Cue ~= "" then
+        local ok, err = pcall(function()
+            -- Extract dialogue ID from cue path
+            local dialogueId = line.Cue:gsub("^/VO/", "")
+            if dialogueId == "" then return end
+
+            -- Deduplicate: skip if same cue was just spoken (within 1 second)
+            local now = _worldTime or 0
+            if dialogueId == _lastSubtitleCue and (now - _lastSubtitleTime) < 1 then
+                return
+            end
+
+            -- Look up subtitle text from SubtitleData table (loaded from x64/subtitles/{lang}.lua)
+            local displayText = ""
+            if SubtitleData and SubtitleData[dialogueId] then
+                displayText = StripFormatting(SubtitleData[dialogueId])
+            end
+
+            -- Skip if no subtitle text available for this cue
+            if displayText == "" then return end
+
+            -- Get speaker name: try source object first, then cue prefix
+            local speakerName = ""
+            if source then
+                local sourceKey = source.Speaker or source.Name or ""
+                if sourceKey ~= "" then
+                    speakerName = NPCDisplayNames[sourceKey] or SafeGetDisplayName(sourceKey)
+                end
+            end
+            if speakerName == "" then
+                speakerName = GetSpeakerFromCue(line.Cue)
+            end
+
+            -- Build speech
+            local speech = ""
+            if speakerName ~= "" then
+                speech = speakerName .. ": " .. displayText
+            else
+                speech = displayText
+            end
+
+            TolkSpeak(speech)
+            _Log("[VOICE-SUBTITLE] " .. speech)
+            _lastSubtitleCue = dialogueId
+            _lastSubtitleTime = now
+        end)
+        if not ok then
+            _Log("[VOICE-SUBTITLE] Error: " .. tostring(err))
+        end
+    end
+
+    return baseFunc(line, prevLine, parentLine, source, args)
+end)
+
+--------------------------------------------------------------
 -- 2) Room/Location Names
 -- Only announces biome transitions + special events (Trial of the Gods,
 -- Thanatos, Biome Cleared, Death, House). Does NOT announce every chamber.
@@ -740,8 +874,13 @@ ModUtil.WrapBaseFunction("AddTraitToHero", function(baseFunc, args)
             rarity = " (" .. tostring(args.Rarity) .. ")"
         end
 
-        local queueSpeak = TolkSpeakQueue or TolkSpeak
-        queueSpeak(string.format(UIStrings.AcquiredFmt, displayName) .. rarity)
+        -- Skip internal bookkeeping traits that never resolved to a readable
+        -- name (displayName is still the raw id, e.g.
+        -- "PoseidonPickedUpMinorLootTrait") -- announcing those is just noise.
+        if displayName ~= traitName then
+            local queueSpeak = TolkSpeakQueue or TolkSpeak
+            queueSpeak(string.format(UIStrings.AcquiredFmt, displayName) .. rarity)
+        end
     end
 
     return result
@@ -942,6 +1081,22 @@ ModUtil.WrapBaseFunction("DisplayUnlockText", function(baseFunc, args)
     -- Don't speak if PlayerReceivedGiftPresentation already handled it
     if args and args.TitleText == "NewTraitUnlocked_Title" then
         -- Already spoken by PlayerReceivedGiftPresentation wrapper
+        return baseFunc(args)
+    end
+
+    -- God Mode level-up (on death): the subtitle "EasyModeLevelUp" resolves to
+    -- "Damage Resistance: {value}%" with a value grafted at render time that the
+    -- mod can't read, so it would speak a bare "%". Compute the real resistance.
+    if args and args.TitleText == "EasyModeUpgradedTitle" then
+        local resistance = 20
+        if GameState and GameState.EasyModeLevel and CalcEasyModeMultiplier then
+            local ok, mult = pcall(CalcEasyModeMultiplier, GameState.EasyModeLevel)
+            if ok and mult then resistance = math.floor((1.0 - mult) * 100 + 0.5) end
+        end
+        local title = SafeGetDisplayName(args.TitleText)
+        if title == "" then title = UIStrings.GodModeEnabled end
+        local queueSpeak = TolkSpeakQueue or TolkSpeak
+        queueSpeak(title .. ", " .. tostring(resistance) .. " " .. UIStrings.PercentDamageResistance)
         return baseFunc(args)
     end
 

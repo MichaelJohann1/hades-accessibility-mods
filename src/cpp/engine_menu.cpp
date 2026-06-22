@@ -531,6 +531,16 @@ bool IsToggleComponent(void* comp)
     return false;
 }
 
+// God Mode / Hell Mode render their on-screen label as icon glyphs, so the text
+// scrape returns junk ("`UG"); resolve them from the HelpText id instead.
+bool IsIconLabeledToggle(void* comp)
+{
+    char name[80];
+    if (!SafeReadBytes(name, reinterpret_cast<uint8_t*>(comp) + 0x90, sizeof(name) - 1)) return false;
+    name[sizeof(name) - 1] = 0;
+    return strcmp(name, "EasyModeButton") == 0 || strcmp(name, "HardModeButton") == 0;
+}
+
 // ============================================================
 // The set of engine menus to narrate (every MenuScreen-derived class except the
 // in-game HUD). Re-derive after a game patch with re-tools/engine_menu_classes.py.
@@ -641,6 +651,13 @@ void OnAnyMenuUpdate(void* self)
         // 0. Control-binding rows: the action name is a sibling label; pair it
         //    with the bound key -> "Special, Q".
         if (ClassIs(sel, "RemappableButtonComponent")) ResolveControlBinding(self, sel, label, sizeof(label));
+
+        // 0.5. Components whose on-screen text scrapes unreliably resolve up front,
+        //      so a garbage scrape can't win: save slots scrape internal junk
+        //      ("p:6") but carry an exact "ProfileN" key (+0x958); God/Hell Mode
+        //      render as icon glyphs ("`UG") but resolve via the HelpText id.
+        if (!label[0]) ResolveProfileSlot(sel, label, sizeof(label));
+        if (!label[0] && IsIconLabeledToggle(sel)) ResolveByScreenAndName(sel, label, sizeof(label));
 
         // 1. The EXACT on-screen text (works for the vast majority of labels).
         if (!label[0]) ReadDisplayedText(sel, label, sizeof(label));
