@@ -2,7 +2,7 @@ Hades accessibility mods changelog
 
 *Version 36: Released 06/23/2026
 Companion keepsakes: the upgrade buttons (the row below the companions in the Keepsake Display Case) now read out, announcing the Ambrosia cost, the level it upgrades to, and whether you cannot afford it or need to equip the companion first.
-Companion descriptions now scale with level, reporting the companion's actual current damage, decoy Health, or duration instead of a fixed description.
+Companion descriptions now report each companion's actual current stats; the four damage-dealing companions (Battie, Mort, Shady, Antos) show their damage scaling up with each level, instead of a fixed description.
 Right stick click (R3) on a controller now toggles subtitles, matching L3 for damage feedback.
 Added screen reader support for the game's engine-level menus (Main Menu, Pause, Settings, Controls, Save File Select, and confirmation dialogs
 Boon descriptions now include a short definition of the status curses they mention (Doom, Hangover, Weak, Chill, Jolted, Charm, Rupture, Exposed, and Deep Freeze), so you hear what each effect does instead of just its name.
