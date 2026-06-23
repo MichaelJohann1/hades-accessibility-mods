@@ -50,6 +50,7 @@ Debug keys turn on simply when `chaos.dat` is present next to the DLL — there 
 | Key | Action |
 |-----|--------|
 | `]` | Grant all 6 companions (Megaera, Achilles, Thanatos, Sisyphus, Skelly, Dusa). First press sets them to level 1; each subsequent press raises every companion one level (cap 5). For testing the keepsake-case level text. |
+| `[` | Grant all keepsakes. First press sets them to level 1; each subsequent press raises every keepsake one level (cap 3). For testing the keepsake-case level text. |
 
 ### Notes
 

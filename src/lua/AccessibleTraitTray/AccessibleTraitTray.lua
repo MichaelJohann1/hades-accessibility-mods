@@ -639,6 +639,10 @@ local function GetKeepsakeDescription(traitName)
         if level > #desc.values then level = #desc.values end
         if level < 1 then level = 1 end
         return string.format(desc.text, desc.values[level])
+    elseif type(desc) == "table" and desc.template then
+        -- Companion live-value format (AccessibleKeepsakes); the in-run tray has no
+        -- extracted TooltipData, so fall back to the plain qualitative wording.
+        return desc.fallback
     elseif type(desc) == "string" then
         return desc
     end

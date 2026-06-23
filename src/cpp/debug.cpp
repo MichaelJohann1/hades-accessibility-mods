@@ -63,6 +63,7 @@ static const DebugKeyEntry s_debugKeys[] = {
     { 0x39,   "_DebugSpawnFish",     "Fish"      },  // Number key 9
     { 0x30,   "_DebugSpawnFountain", "Fountain"  },  // Number key 0
     { VK_OEM_6, "_DebugGrantCompanions", "Companions" },  // ] key: grant + level all companions (test keepsake level text)
+    { VK_OEM_4, "_DebugGrantKeepsakes", "Keepsakes" },    // [ key: grant + level all keepsakes (test keepsake level text)
 };
 static const int s_debugKeyCount = sizeof(s_debugKeys) / sizeof(s_debugKeys[0]);
 static bool s_wasDown[32] = {};
@@ -141,9 +142,11 @@ static const wchar_t* GetUIString(lua_State* L, const char* key, const wchar_t* 
     return s_uiStringBuf;
 }
 
-// Subtitle toggle: backslash key (\) toggles _SubtitleReadingEnabled Lua global.
+// Subtitle toggle: backslash key (\) on keyboard, or R3 (right stick click) on
+// controller, toggles the _SubtitleReadingEnabled Lua global.
 // State persisted to subtitle_on.flag file next to the DLL.
 static bool s_subtitleKeyWasDown = false;
+static bool s_subtitleR3WasDown = false;
 
 static std::wstring GetSubtitleFlagPath()
 {
@@ -172,8 +175,9 @@ static void SaveSubtitleFlag(bool enabled)
 void CheckSubtitleToggle(lua_State* L)
 {
     bool shiftDown = (GetAsyncKeyState(VK_SHIFT) & 0x8000) != 0;
-    bool down = (GetAsyncKeyState(VK_OEM_5) & 0x8000) != 0 && !shiftDown;  // backslash without shift
-    if (down && !s_subtitleKeyWasDown) {
+    bool keyDown = (GetAsyncKeyState(VK_OEM_5) & 0x8000) != 0 && !shiftDown;  // backslash without shift
+    bool r3Down = (XInputProxy::GetButtons() & 0x0080) != 0;  // R3 (right stick click) = XINPUT_GAMEPAD_RIGHT_THUMB
+    if ((keyDown && !s_subtitleKeyWasDown) || (r3Down && !s_subtitleR3WasDown)) {
         int savedTop = lua.gettop(L);
         __try {
             // Read current state
@@ -204,7 +208,8 @@ void CheckSubtitleToggle(lua_State* L)
             lua.settop(L, savedTop);
         }
     }
-    s_subtitleKeyWasDown = down;
+    s_subtitleKeyWasDown = keyDown;
+    s_subtitleR3WasDown = r3Down;
 }
 
 void LoadSubtitleState(lua_State* L)

@@ -23,6 +23,7 @@ Key mapping (set by C++ CheckDebugKeys):
   9:      Spawn fishing point in current room
   0:      Spawn healing fountain
   ]:      Grant all 6 companions (Megaera/Achilles/Thanatos/Sisyphus/Skelly/Dusa) at level 1; each press raises them one level (cap 5), for testing keepsake-case level text
+  [:      Grant all keepsakes at level 1; each press raises them one level (cap 3), for testing keepsake-case level text
 --]]
 
 -- God boon spawn config: flag name -> loot name
@@ -317,6 +318,56 @@ thread(function()
                     GameState.AssistUnlocks[c.trait] = newVal
                 end
                 spawnMsg = "All companions set to level " .. (newVal + 1)
+            end)
+            if AccessibilityEnabled and AccessibilityEnabled() then
+                TolkSpeak(spawnMsg)
+            end
+        end
+
+        -- [ key: grant all keepsakes; first press = level 1, each press +1 (cap 3)
+        if _DebugGrantKeepsakes then
+            _DebugGrantKeepsakes = nil
+            local spawnMsg = "Keepsake grant error"
+            pcall(function()
+                if not GameState then
+                    spawnMsg = "GameState not ready"
+                    return
+                end
+                GameState.Gift = GameState.Gift or {}
+                GameState.KeepsakeChambers = GameState.KeepsakeChambers or {}
+                -- First press = level 1; each later press raises everyone one level, capped at 3.
+                local cur = _DebugKeepsakeGrantLevel
+                local targetLevel = (cur == nil) and 1 or math.min(cur + 1, 3)
+                _DebugKeepsakeGrantLevel = targetLevel
+
+                local count = 0
+                for npcName, npcGift in pairs(GiftData) do
+                    if type(npcGift) == "table" and npcGift.Maximum then
+                        for s = 1, npcGift.Maximum do
+                            local slot = npcGift[s]
+                            if slot and slot.Gift and TraitData[slot.Gift]
+                                and TraitData[slot.Gift].Slot == "Keepsake" then
+                                local trait = slot.Gift
+                                -- Unlock: raise the NPC's gift value so the keepsake's slot is revealed
+                                GameState.Gift[npcName] = GameState.Gift[npcName] or { NewTraits = {} }
+                                GameState.Gift[npcName].NewTraits = GameState.Gift[npcName].NewTraits or {}
+                                GameState.Gift[npcName].Value = math.max(GameState.Gift[npcName].Value or 0, 9)
+                                -- Set the keepsake's level by faking the chamber count (sum of
+                                -- the ChamberThresholds for the ranks below targetLevel).
+                                local thresholds = TraitData[trait].ChamberThresholds
+                                local chambers = 0
+                                if thresholds then
+                                    for i = 1, targetLevel - 1 do
+                                        chambers = chambers + (thresholds[i] or 0)
+                                    end
+                                end
+                                GameState.KeepsakeChambers[trait] = chambers
+                                count = count + 1
+                            end
+                        end
+                    end
+                end
+                spawnMsg = "Granted " .. count .. " keepsakes at level " .. targetLevel
             end)
             if AccessibilityEnabled and AccessibilityEnabled() then
                 TolkSpeak(spawnMsg)

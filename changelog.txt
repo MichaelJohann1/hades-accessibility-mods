@@ -1,7 +1,14 @@
 Hades accessibility mods changelog
 
-*Version 36: Released 06/20/2026
-Added screen reader support for the game's engine-level menus (Main Menu, Pause, Settings, Controls, Save File Select, and confirmation dialogs), which previously could not be read at all. As you navigate, each item is spoken through Tolk, including relabeled settings such as God Mode, save profile slots, and control bindings paired with their action names (e.g. "Special, Q"). Confirmation dialog prompts are read aloud when they appear. Each control's type is announced so you know how to interact with it — sliders are announced as "slider" and toggles as "toggle". Toggles don't speak their on or off state, but the game plays a distinct sound for on and for off so you can tell which is which. This is implemented in the native DLL by reading the engine's menu screens directly, since these menus are not built with Lua and cannot be reached by the mod scripts.
+*Version 36: Released 06/23/2026
+Companion keepsakes: the upgrade buttons (the row below the companions in the Keepsake Display Case) now read out, announcing the Ambrosia cost, the level it upgrades to, and whether you cannot afford it or need to equip the companion first.
+Companion descriptions now scale with level, reporting the companion's actual current damage, decoy Health, or duration instead of a fixed description.
+Right stick click (R3) on a controller now toggles subtitles, matching L3 for damage feedback.
+Added screen reader support for the game's engine-level menus (Main Menu, Pause, Settings, Controls, Save File Select, and confirmation dialogs
+Boon descriptions now include a short definition of the status curses they mention (Doom, Hangover, Weak, Chill, Jolted, Charm, Rupture, Exposed, and Deep Freeze), so you hear what each effect does instead of just its name.
+God Mode now announces the actual damage resistance percentage when it increases on death, instead of reading "Damage Resistance:" with no number.
+Fixed occasional garbled labels in the engine menus for the God Mode toggle and the save profile slots. Settings toggles are announced as "toggle" and sliders as "slider", while navigation and action buttons (such as Controls or Reset) are no longer mislabeled as toggles.
+Internal trait names such as "PoseidonPickedUpMinorLootTrait" are no longer announced when certain rewards are picked up.
 Removed the sound that played when all enemies in a room were defeated (added in version 35).
 
 *Version 35.1: Released 03/23/2026

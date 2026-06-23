@@ -15,6 +15,16 @@ Provides screen reader accessibility for the Keepsake Display Case (AwardMenu) s
 
 local function _Log(msg) if LogEvent then LogEvent(msg) end end
 
+-- UIStrings is populated by ZLocalizationCore. If a stale or partial localization
+-- table is ever active (e.g. an old DLL left in memory, or a load-order edge case),
+-- a missing key must not turn a string.format/concatenation into a crash — which
+-- pops Hades' bug reporter. Fall back to the English default instead.
+local function US(key, fallback)
+    local v = UIStrings and UIStrings[key]
+    if v == nil then return fallback end
+    return v
+end
+
 -- Strip Hades text formatting tags for clean screen reader output
 local function StripFormatting(text)
     if not text then return "" end
@@ -55,8 +65,49 @@ end
 
 -- Hardcoded keepsake descriptions from Hades Wiki
 -- (GetTraitTooltip returns localization keys that GetDisplayName cannot resolve)
--- Level-dependent entries use { text = "format with %s", values = {"rank1", "rank2", "rank3"} }
--- Plain string entries have no level variation (companions)
+-- Level-dependent keepsakes use { text = "format with %s", values = {"rank1", "rank2", "rank3"} }
+-- Companions use { field = "<extracted field>", template = "...%s...", fallback = "..." } so the
+--   per-level value the game shows (TooltipDamage/Health/Duration) is read live from trait data.
+-- Plain string entries have no level variation.
+--
+-- Companion descriptions live in this LOCAL upvalue (closed over by BuildKeepsakeSpeech)
+-- so they cannot be reverted by a stale/clobbered global KeepsakeDescriptions — a runtime
+-- bug (session 61) where the global ends up holding old companion strings even though this
+-- file defines the new tables. The same entries are mirrored into the global below for
+-- cross-mod access (AccessibleTraitTray).
+local CompanionDescriptions = {
+    FuryAssistTrait = {
+        field = "TooltipDamage",
+        template = "Your Companion deals %s damage in an area near your closest foe, then continually down the line",
+        fallback = "Your Companion deals damage in an area near your closest foe, then continually down the line",
+    },
+    AchillesPatroclusAssistTrait = {
+        field = "TooltipDamage",
+        template = "Your Companion deals %s damage to 2 foes one after another",
+        fallback = "Your Companion deals damage to 2 foes one after another",
+    },
+    ThanatosAssistTrait = {
+        field = "TooltipDamage",
+        template = "Your Companion deals %s damage in an area in front of you, after a brief delay",
+        fallback = "Your Companion deals damage in an area in front of you, after a brief delay",
+    },
+    SisyphusAssistTrait = {
+        field = "TooltipDamage",
+        template = "Your Companion deals %s damage in an area, and drops some Health, Darkness, and Obols",
+        fallback = "Your Companion deals damage in an area, and drops some Health, Darkness, and Obols",
+    },
+    SkellyAssistTrait = {
+        field = "TooltipHealth",
+        template = "Your Companion creates a distraction with %s Health, provoking your foes to attack it until it dies",
+        fallback = "Your Companion creates a distraction, provoking your foes to attack it until it dies",
+    },
+    DusaAssistTrait = {
+        field = "TooltipDuration",
+        template = "Your Companion joins you for %s seconds, repeatedly firing shots that petrify foes and deal 70 damage",
+        fallback = "Your Companion joins you, repeatedly firing shots that petrify foes and deal 70 damage",
+    },
+}
+
 KeepsakeDescriptions = {
     MaxHealthKeepsakeTrait = { text = "Gain +%s max Health. From Cerberus", values = {"25", "38", "50"} },
     DirectionalArmorTrait = { text = "Take -%s%% damage from the front, but take 10%% from the back", values = {"10", "15", "20"} },
@@ -83,12 +134,38 @@ KeepsakeDescriptions = {
     ShieldAfterHitTrait = { text = "After taking damage, become impervious for %s seconds. Refreshes after 7 seconds. From Patroclus", values = {"1", "1.25", "1.5"} },
     ChamberStackTrait = { text = "After every %s Encounters, gain +1 Lv. (a random Boon grows stronger)", values = {"6", "5", "4"} },
     HadesShoutKeepsake = { text = "Your Call becomes Hades' Aid, which briefly makes you Invisible; your God Gauge starts %s%% full", values = {"10", "20", "30"} },
-    FuryAssistTrait = "Summon Megaera to deal damage in an area near the closest foe",
-    AchillesPatroclusAssistTrait = "Summon Achilles to deal damage to multiple foes one after another",
-    ThanatosAssistTrait = "Summon Thanatos to deal damage in an area in front of you, after a brief delay",
-    SisyphusAssistTrait = "Summon Sisyphus to deal damage in an area and drop healing items, Darkness, and Obols",
-    SkellyAssistTrait = "Your Summon creates a distraction with 250 Health, provoking your foes to attack it until it dies",
-    DusaAssistTrait = "Your Summon joins you for 30 Sec, repeatedly firing shots that petrify foes and deal 70 damage",
+    -- Companions: damage/health/duration scale with level (Common 1x -> Legendary 5x).
+    -- Wording mirrors the game's own tooltips; %s is filled from the live extracted field.
+    FuryAssistTrait = {
+        field = "TooltipDamage",
+        template = "Your Companion deals %s damage in an area near your closest foe, then continually down the line",
+        fallback = "Your Companion deals damage in an area near your closest foe, then continually down the line",
+    },
+    AchillesPatroclusAssistTrait = {
+        field = "TooltipDamage",
+        template = "Your Companion deals %s damage to 2 foes one after another",
+        fallback = "Your Companion deals damage to 2 foes one after another",
+    },
+    ThanatosAssistTrait = {
+        field = "TooltipDamage",
+        template = "Your Companion deals %s damage in an area in front of you, after a brief delay",
+        fallback = "Your Companion deals damage in an area in front of you, after a brief delay",
+    },
+    SisyphusAssistTrait = {
+        field = "TooltipDamage",
+        template = "Your Companion deals %s damage in an area, and drops some Health, Darkness, and Obols",
+        fallback = "Your Companion deals damage in an area, and drops some Health, Darkness, and Obols",
+    },
+    SkellyAssistTrait = {
+        field = "TooltipHealth",
+        template = "Your Companion creates a distraction with %s Health, provoking your foes to attack it until it dies",
+        fallback = "Your Companion creates a distraction, provoking your foes to attack it until it dies",
+    },
+    DusaAssistTrait = {
+        field = "TooltipDuration",
+        template = "Your Companion joins you for %s seconds, repeatedly firing shots that petrify foes and deal 70 damage",
+        fallback = "Your Companion joins you, repeatedly firing shots that petrify foes and deal 70 damage",
+    },
 }
 
 -- Map keepsake trait names to the NPC who gives them
@@ -207,11 +284,18 @@ local function BuildKeepsakeSpeech(button)
         speech = speech .. ", Companion"
     end
 
-    -- Add keepsake description from hardcoded table (level-aware)
-    if traitData.Name and KeepsakeDescriptions[traitData.Name] then
-        local desc = KeepsakeDescriptions[traitData.Name]
-        if type(desc) == "table" then
-            -- Level-dependent description: pick value for current rank
+    -- Add keepsake description. Companions read from the LOCAL CompanionDescriptions
+    -- (a clobber-proof upvalue); all other keepsakes from the global table. A runtime
+    -- bug (session 61) can revert the global's companion entries to old strings, so the
+    -- local copy is the source of truth for companions.
+    local descSource = KeepsakeDescriptions
+    if traitData.Slot == "Assist" and CompanionDescriptions[traitData.Name] then
+        descSource = CompanionDescriptions
+    end
+    if traitData.Name and descSource[traitData.Name] then
+        local desc = descSource[traitData.Name]
+        if type(desc) == "table" and desc.values then
+            -- Level-dependent keepsake: pick value for current rank
             local level = 1
             if GetKeepsakeLevel then
                 local ok, lvl = pcall(GetKeepsakeLevel, traitData.Name)
@@ -221,8 +305,30 @@ local function BuildKeepsakeSpeech(button)
             end
             local value = desc.values[level] or desc.values[1]
             speech = speech .. ". " .. string.format(desc.text, value)
-        else
-            -- Plain string description (companions)
+        elseif type(desc) == "table" and desc.template then
+            -- Companion: substitute the live per-level value. Only the four
+            -- PropertyChange companions (Battie/Mort/Shady/Antos) have rarity-scaled
+            -- damage, so their extracted TooltipDamage (the BASE) is multiplied by the
+            -- level (Common 1x -> Legendary 5x = the level number). Rib's decoy Health
+            -- and Fidi's duration/damage come from FIXED summon units (SkellyAssist /
+            -- DusaAssist spawn fixed enemies, no rarity scaling), so they show unscaled.
+            local value = desc.field and traitData[desc.field]
+            local n = tonumber(value)
+            if n and desc.field == "TooltipDamage" then
+                local lvl = 1
+                if GetKeepsakeLevel then
+                    local ok, l = pcall(GetKeepsakeLevel, traitData.Name)
+                    if ok and l and l > 0 then lvl = l end
+                end
+                value = math.floor(n * lvl + 0.5)
+            end
+            if value ~= nil then
+                speech = speech .. ". " .. string.format(desc.template, tostring(value))
+            elseif desc.fallback then
+                speech = speech .. ". " .. desc.fallback
+            end
+        elseif type(desc) == "string" then
+            -- Plain string description
             speech = speech .. ". " .. desc
         end
     end
@@ -296,6 +402,95 @@ OnMouseOver{ "LegendaryKeepsakeLockedButton",
         else
             TolkSilence()
             TolkSpeak(UIStrings.LockedCompanion)
+        end
+    end
+}
+
+-- Companion upgrade buttons (spend Ambrosia to raise a Companion's level).
+-- The native game leaves these silent for screen readers, so announce the
+-- target level and Ambrosia cost. button.GiftName / button.ParentButton are
+-- set by CreateKeepsakeIcon (AwardMenuScripts.lua).
+OnMouseOver{ "AssistUpgradeButton",
+    function(triggerArgs)
+        if not AccessibilityEnabled or not AccessibilityEnabled() then
+            return
+        end
+        if not triggerArgs or not triggerArgs.triggeredById then
+            return
+        end
+        if not IsScreenOpen("AwardMenu") then
+            return
+        end
+        if not ScreenAnchors or not ScreenAnchors.AwardMenuScreen then
+            return
+        end
+        local button = ScreenAnchors.AwardMenuScreen[triggerArgs.triggeredById]
+        if not button or not button.GiftName then
+            return
+        end
+        local giftName = button.GiftName
+
+        -- Resolve the Companion's display name (Battie, Mort, etc.)
+        local traitData = button.ParentButton and button.ParentButton.TraitData
+        local displayName = nil
+        if traitData then
+            if traitData.InRackTitle then
+                displayName = SafeGetDisplayName(traitData.InRackTitle)
+            end
+            if (not displayName or displayName == "") and traitData.Name then
+                displayName = SafeGetDisplayName(traitData.Name)
+            end
+        end
+        if not displayName or displayName == "" then
+            displayName = giftName
+        end
+
+        local speech
+        local maxed = false
+        if IsKeepsakeMaxed then
+            local ok, m = pcall(IsKeepsakeMaxed, giftName)
+            if ok then maxed = m end
+        end
+
+        if maxed then
+            speech = string.format(US("CompanionMaxed", "%s, maximum level"), displayName)
+        else
+            -- Current Companion level is 1-5; the upgrade moves it to level + 1.
+            local level = 1
+            if GetAssistKeepsakeLevel then
+                local ok, lvl = pcall(GetAssistKeepsakeLevel, giftName)
+                if ok and lvl then level = lvl end
+            end
+            local cost = nil
+            if GetAssistKeepsakeUpgradeCost then
+                local ok, c = pcall(GetAssistKeepsakeUpgradeCost, giftName)
+                if ok then cost = c end
+            end
+            if cost then
+                speech = string.format(US("UpgradeCompanion", "Upgrade %s to Level %s, costs %s Ambrosia"), displayName, level + 1, cost)
+                -- Flag when the player can't afford the upgrade.
+                local affordable = true
+                if HasResource then
+                    local ok, has = pcall(HasResource, "SuperGiftPoints", cost)
+                    if ok then affordable = has end
+                end
+                if not affordable then
+                    speech = speech .. ", " .. US("NotEnoughAmbrosia", "not enough Ambrosia")
+                end
+                -- A Companion must be equipped before it can be upgraded; otherwise
+                -- the first press just equips it (UpgradeAssistKeepsake in
+                -- AwardMenuScripts.lua returns early when it isn't the equipped one).
+                if not (GameState and GameState.LastAssistTrait == giftName) then
+                    speech = speech .. ", " .. US("EquipFirstToUpgrade", "equip this Companion first to upgrade")
+                end
+            else
+                speech = displayName
+            end
+        end
+
+        if speech and speech ~= "" then
+            TolkSilence()
+            TolkSpeak(speech)
         end
     end
 }

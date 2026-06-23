@@ -28,7 +28,7 @@ scripts/          Build and code generation scripts
 | `lua_wrappers.h/cpp` | C closures replacing 6 Lua globals + 8 bridge functions |
 | `embedded_mods.h` | Header for embedded Lua mod data (cpp is auto-generated) |
 | `audio_feedback.h/cpp` | waveOut tone synthesis for damage feedback |
-| `debug.h/cpp` | Subtitle toggle, damage feedback toggle, language detection |
+| `debug.h/cpp` | Subtitle toggle (backslash / R3 right-stick), damage feedback toggle (Shift+backslash / L3 left-stick), language detection, debug spawn keys (see `DEBUG_KEYS.md`) |
 | `logger.h/cpp` | Thread-safe timestamped file logging |
 | `path_resolver.h/cpp` | Finds exe dir, game root, speech DLLs |
 | `tolk_loader.h/cpp` | Dynamic Tolk.dll loading |
@@ -183,6 +183,8 @@ Without it, the engine can't find the Lua table and OnMouseOver never fires.
 **Hardcoded descriptions required** — `GetDisplayName`, `GetTraitTooltip`, and `GetTraitTooltipTitle` return unresolvable localization keys for most game content. The engine resolves descriptions via `UseDescription = true` in `CreateTextBoxWithFormat` at C++ render time — not accessible from Lua. All descriptions must be hardcoded from game data.
 
 **Cross-mod global tables** — these tables are made global for cross-mod access: `BoonDisplayNames`, `GodBoonDescriptions`, `HammerDescriptions`, `ChaosBlessingDescriptions`, `ChaosCurseDescriptions`, `WellItemNames`, `WellItemDescriptions`, `KeepsakeDescriptions`.
+
+**Companion descriptions use a local copy** — the global `KeepsakeDescriptions` companion entries can be reverted to old strings at runtime by an as-yet-unidentified mechanism (the old text exists in no loaded file, and English sessions load no language overlay). AccessibleKeepsakes therefore keeps the 6 companion entries in a `local CompanionDescriptions` upvalue that `BuildKeepsakeSpeech` reads from (immune to the global being clobbered) and mirrors them into the global only for cross-mod reads. Only the four PropertyChange companions (Battie/Mort/Shady/Antos) have rarity-scaled damage: their extracted `TooltipDamage` (off `button.TraitData`) is the BASE, multiplied by the companion level (`GetKeepsakeLevel` = the rarity multiplier 1–5). Rib's decoy Health (`TooltipHealth`) and Fidi's duration + hard-coded 70 damage (`TooltipDuration`) come from FIXED summon units — `SkellyAssist`/`DusaAssist` spawn fixed enemies (`TrainingMeleeSummon`/`DusaSummon`, `SkipModifiers`) with no rarity scaling — so they are shown unscaled. Root cause of the global revert is still open.
 
 ### Menu Mod Pattern
 

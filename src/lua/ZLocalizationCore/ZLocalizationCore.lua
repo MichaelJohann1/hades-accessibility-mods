@@ -36,6 +36,7 @@ _LocalizableTables = {
     -- AccessibleNotifications.lua
     "LocationDisplayNames",
     "NPCDisplayNames",
+    "CuePrefixToSpeaker",
     "FishDisplayNames",
     "ObjectiveDescriptions",
     "WeaponDisplayNames",
@@ -289,6 +290,9 @@ UIStrings = {
     -- Quest reward
     RewardFmt = "Reward: %s %s",
 
+    -- Voice subtitle speaker
+    Narrator = "Narrator",
+
     -- Misc
     Boons = "Boons",
     WellItems = "Well items",
@@ -301,6 +305,10 @@ UIStrings = {
     ExaminePoint = "Examine Point",
     LockedKeepsake = "Locked keepsake",
     LockedCompanion = "Locked companion",
+    UpgradeCompanion = "Upgrade %s to Level %s, costs %s Ambrosia",
+    NotEnoughAmbrosia = "not enough Ambrosia",
+    CompanionMaxed = "%s, maximum level",
+    EquipFirstToUpgrade = "equip this Companion first to upgrade",
     NoEarlierRuns = "No earlier runs",
     NoLaterRuns = "No later runs",
     UpDownBrowse = "Up and Down to browse",

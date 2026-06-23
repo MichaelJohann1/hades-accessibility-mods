@@ -43,7 +43,7 @@ For expanded subtitle reading (end-of-conversation remarks, ambient voice lines)
 
 All in-game menus now have screen reader support through Tolk. When you navigate menus, items and descriptions will be spoken automatically by your screen reader.
 
-Press the backslash key (\\) to toggle subtitle reading on or off. When enabled, all dialogue text will be spoken with the speaker's name (e.g. "Achilles: I hope you're well, lad."). This includes end-of-conversation remarks, ambient barks, and other voice lines that play outside of the main dialogue system.
+Press the backslash key (\\) on the keyboard or click the right stick (R3) on the controller to toggle subtitle reading on or off. When enabled, all dialogue text will be spoken with the speaker's name (e.g. "Achilles: I hope you're well, lad."). This includes end-of-conversation remarks, ambient barks, and other voice lines that play outside of the main dialogue system.
 
 Subtitles are off by default. Your preference is saved automatically and will persist across game sessions. If you turn subtitles on, they will stay on the next time you launch the game.
 
