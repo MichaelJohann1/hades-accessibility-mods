@@ -10,6 +10,7 @@ God Mode now announces the actual damage resistance percentage when it increases
 Fixed occasional garbled labels in the engine menus for the God Mode toggle and the save profile slots. Settings toggles are announced as "toggle" and sliders as "slider", while navigation and action buttons (such as Controls or Reset) are no longer mislabeled as toggles.
 Internal trait names such as "PoseidonPickedUpMinorLootTrait" are no longer announced when certain rewards are picked up.
 Removed the sound that played when all enemies in a room were defeated (added in version 35).
+Completed the translation coverage added in version 35: the Mirror of Night and Pact of Punishment talent descriptions, the music player track titles, and the remaining interface strings are now translated in all 10 supported languages, where previously they fell back to English.
 
 *Version 35.1: Released 03/23/2026
 Expanded subtitle reading to cover voice lines that play outside of the main dialogue system, including end-of-conversation remarks, ambient barks, and other standalone voice cues. When subtitles are toggled on (backslash key), these voice lines are now spoken with the speaker's name and the dialogue text. This uses the game's own subtitle data files, so it works in all supported languages.

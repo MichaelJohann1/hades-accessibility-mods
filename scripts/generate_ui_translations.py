@@ -1309,6 +1309,50 @@ def _ui():
             "it": "Ricompensa: %s %s", "pt-BR": "Recompensa: %s %s", "ru": "Награда: %s %s",
             "pl": "Nagroda: %s %s", "ja": "報酬: %s %s", "ko": "보상: %s %s", "zh-CN": "奖励: %s %s",
         },
+        # --- Companion upgrade (Keepsake Display Case) ---
+        "UpgradeCompanion": {
+            "fr": "Améliorer %s au niveau %s, coûte %s Ambroisie",
+            "de": "%s auf Stufe %s verbessern, kostet %s Ambrosia",
+            "es": "Mejorar %s a nivel %s, cuesta %s de Ambrosía",
+            "it": "Potenzia %s al livello %s, costa %s Ambrosia",
+            "pt-BR": "Aprimorar %s para o nível %s, custa %s de Ambrosia",
+            "ru": "Улучшить %s до уровня %s, стоит %s амброзии",
+            "pl": "Ulepsz %s do poziomu %s, kosztuje %s Ambrozji",
+            "ja": "%sをレベル%sに強化、アンブロシア%s必要",
+            "ko": "%s을(를) %s레벨로 강화, 암브로시아 %s 필요",
+            "zh-CN": "将%s升级到%s级，需要%s仙馐",
+        },
+        "NotEnoughAmbrosia": {
+            "fr": "pas assez d'Ambroisie", "de": "nicht genug Ambrosia",
+            "es": "Ambrosía insuficiente", "it": "Ambrosia insufficiente",
+            "pt-BR": "Ambrosia insuficiente", "ru": "недостаточно амброзии",
+            "pl": "za mało Ambrozji", "ja": "アンブロシアが足りません",
+            "ko": "암브로시아 부족", "zh-CN": "仙馐不足",
+        },
+        "CompanionMaxed": {
+            "fr": "%s, niveau maximum", "de": "%s, maximale Stufe",
+            "es": "%s, nivel máximo", "it": "%s, livello massimo",
+            "pt-BR": "%s, nível máximo", "ru": "%s, максимальный уровень",
+            "pl": "%s, maksymalny poziom", "ja": "%s、最大レベル",
+            "ko": "%s, 최대 레벨", "zh-CN": "%s，最高等级",
+        },
+        "EquipFirstToUpgrade": {
+            "fr": "équipez d'abord ce Compagnon pour l'améliorer",
+            "de": "Rüste diesen Begleiter zuerst aus, um ihn zu verbessern",
+            "es": "equipa este Compañero primero para mejorarlo",
+            "it": "equipaggia prima questo Compagno per potenziarlo",
+            "pt-BR": "equipe este Companheiro primeiro para aprimorar",
+            "ru": "сначала снарядите этого спутника для улучшения",
+            "pl": "najpierw wyposaż tego Towarzysza, aby ulepszyć",
+            "ja": "強化するにはまずこの仲間を装備してください",
+            "ko": "강화하려면 먼저 이 동료를 장착하세요",
+            "zh-CN": "请先装备此伙伴以进行升级",
+        },
+        "Narrator": {
+            "fr": "Narrateur", "de": "Erzähler", "es": "Narrador",
+            "it": "Narratore", "pt-BR": "Narrador", "ru": "Рассказчик",
+            "pl": "Narrator", "ja": "ナレーター", "ko": "내레이터", "zh-CN": "旁白",
+        },
     }
     return t
 
@@ -3103,6 +3147,26 @@ def _keepsake_gift_names():
 # ============================================================
 # Main: Generate JSON files
 # ============================================================
+def _metaupgrade_descriptions():
+    """MetaUpgradeDescriptions — AI-translated Mirror of Night / Pact of Punishment
+    talent description templates (validated to preserve %d / %% placeholders).
+
+    Loads scripts/metaupgrade_translations.json ({lang: {KEY: translation}}) and
+    reshapes to the {KEY: {lang: translation}} form the pipeline expects. The
+    generator emits these as complete sub-tables (template + numeric fields).
+    """
+    path = os.path.join(SCRIPT_DIR, "metaupgrade_translations.json")
+    if not os.path.exists(path):
+        return {}
+    with open(path, encoding="utf-8") as f:
+        by_lang = json.load(f)
+    t = {}
+    for lang, entries in by_lang.items():
+        for key, tr in entries.items():
+            t.setdefault(key, {})[lang] = tr
+    return t
+
+
 def _extract_lang(table_data, lang):
     """Extract entries for a specific language from a table_data dict."""
     result = {}
@@ -3131,6 +3195,7 @@ def main():
         "PactFlavorText": _pact_flavor_text(),
         "GodBoonDescriptions": _god_boon_descriptions(),
         "ContractorItemNames": _contractor_item_names(),
+        "MetaUpgradeDescriptions": _metaupgrade_descriptions(),
     }
 
     langs = ["de", "es", "fr", "it", "ja", "ko", "pl", "pt-BR", "ru", "zh-CN"]

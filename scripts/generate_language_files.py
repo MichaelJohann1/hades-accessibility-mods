@@ -75,6 +75,7 @@ HYBRID_TABLES = {
     "ChoiceDisplayNames":   ("AccessibleNotifications/AccessibleNotifications.lua", "DisplayName"),
     "AspectDisplayNames":   ("AccessibleTraitTray/AccessibleTraitTray.lua", "DisplayName"),
     "TrackDisplayNames":    ("AccessibleMusicPlayer/AccessibleMusicPlayer.lua", "DisplayName"),
+    "MusicTrackDisplayNames": ("AccessibleContractor/AccessibleContractor.lua", "DisplayName"),
 }
 
 # Manual-only tables — no HelpText lookup possible.
@@ -86,6 +87,7 @@ MANUAL_ONLY_TABLES = {
     "MirrorFlavorText":("AccessibleMirror/AccessibleMirror.lua",),
     "PactFlavorText":  ("AccessibleMirror/AccessibleMirror.lua",),
     "ObjectiveDescriptions": ("AccessibleNotifications/AccessibleNotifications.lua",),
+    "CuePrefixToSpeaker": ("AccessibleNotifications/AccessibleNotifications.lua",),
 }
 
 
@@ -591,6 +593,54 @@ def generate_table_entries(keys, helptext, field, keywords, tooltip_data,
     return entries
 
 
+def parse_metaupgrade_descriptions(mod_path):
+    """Parse AccessibleMirror's MetaUpgradeDescriptions sub-tables.
+
+    Each entry is a sub-table {base=...|text=..., perLevel=N, static=true, ...} that
+    the runtime reads field-by-field (desc.base, desc.perLevel) to substitute the
+    per-rank value. Localization must therefore emit a COMPLETE translated sub-table
+    (translated template + the original numeric fields), not a flat string — a flat
+    string would null out desc.base and the description would vanish.
+
+    Returns OrderedDict {KEY: {"field": "base"|"text", "en": str, "extras": [str,...]}}.
+    """
+    from collections import OrderedDict
+    try:
+        content = open(mod_path, encoding='utf-8').read()
+    except OSError:
+        return OrderedDict()
+    m = re.search(r'\nMetaUpgradeDescriptions\s*=\s*\{', content)
+    if not m:
+        return OrderedDict()
+    start = m.end()
+    depth, p = 1, start
+    while p < len(content) and depth > 0:
+        if content[p] == '{':
+            depth += 1
+        elif content[p] == '}':
+            depth -= 1
+        p += 1
+    body = content[start:p - 1]
+    result = OrderedDict()
+    for km in re.finditer(r'(?m)^    (\w+)\s*=\s*\{(.*?)^    \},?\s*$', body, re.S):
+        key, block = km.group(1), km.group(2)
+        field, tmpl, extras = None, None, []
+        for line in block.splitlines():
+            line = line.strip()
+            if not line or line.startswith('--'):
+                continue
+            cm = re.match(r'(base|text)\s*=\s*"(.*)"\s*,?\s*$', line)
+            if cm:
+                field, tmpl = cm.group(1), cm.group(2)
+                continue
+            fm = re.match(r'(\w+)\s*=\s*([^,]+?)\s*,?\s*(?:--.*)?$', line)
+            if fm:
+                extras.append(f"{fm.group(1)} = {fm.group(2).strip()}")
+        if field and tmpl is not None:
+            result[key] = {"field": field, "en": tmpl, "extras": extras}
+    return result
+
+
 def generate_language_file(lang_code, helptext, keywords, tooltip_data,
                            table_keys, manual_translations, en_helptext=None,
                            extract_index=None):
@@ -653,10 +703,57 @@ def generate_language_file(lang_code, helptext, keywords, tooltip_data,
             total_entries += len(manual)
             table_stats.append((table_name, len(manual), len(manual)))
 
+    # 4. MetaUpgradeDescriptions — emit COMPLETE sub-tables (translated template +
+    #    original numeric fields) so the runtime's flat overwrite swaps one valid
+    #    sub-table for another and desc.base/.perLevel/.static survive.
+    meta_struct = parse_metaupgrade_descriptions(
+        os.path.join(MODS_DIR, "AccessibleMirror", "AccessibleMirror.lua"))
+    if meta_struct:
+        mud = manual_translations.get("MetaUpgradeDescriptions", {})
+        lines.append("L.MetaUpgradeDescriptions = {")
+        n_tr = 0
+        for key, info in meta_struct.items():
+            tmpl = mud.get(key)
+            if tmpl:
+                n_tr += 1
+            else:
+                tmpl = info["en"]  # untranslated -> keep English template
+            parts = [f'{info["field"]} = "{escape_lua_string(tmpl)}"'] + info["extras"]
+            lines.append(f'    {key} = {{ {", ".join(parts)} }},')
+        lines.append("}\n")
+        total_entries += len(meta_struct)
+        table_stats.append(("MetaUpgradeDescriptions", n_tr, len(meta_struct)))
+
     lines.append("_ApplyLanguageData(L)")
     lines.append("")
 
     return '\n'.join(lines), total_entries, table_stats
+
+
+def augment_helptext(helptext):
+    """Augment HelpText with derived entries so mod tables resolve to OFFICIAL text.
+
+    1. Mirror/Pact upgrades expose only DisplayName = "{$Keywords.X}" (the talent
+       name) and no Description. The effect description IS keyword X's Description;
+       copy it onto the upgrade entry so MetaUpgradeDescriptions resolves officially.
+    2. Music Player track titles live under HelpText IDs "MusicMusicPlayer<Suffix>",
+       but the mod keys them by audio path "/Music/MusicPlayer/<Suffix>". Register an
+       alias so the track-name tables resolve to the localized title.
+    """
+    kw_re = re.compile(r'^\{\$Keywords\.(\w+)\}$')
+    for entry in list(helptext.values()):
+        if entry.get('Description'):
+            continue
+        dn = (entry.get('DisplayName') or '').strip()
+        m = kw_re.match(dn)
+        if m:
+            kw_entry = helptext.get(m.group(1))
+            if kw_entry and kw_entry.get('Description'):
+                entry['Description'] = kw_entry['Description']
+    for key in list(helptext.keys()):
+        if key.startswith('MusicMusicPlayer'):
+            alias = '/Music/MusicPlayer/' + key[len('MusicMusicPlayer'):]
+            helptext.setdefault(alias, helptext[key])
 
 
 # ============================================================
@@ -755,6 +852,7 @@ def main():
         print(f"Parsing English HelpText as secondary source...")
         en_helptext = parse_sjson(en_helptext_path)
         resolve_inheritance(en_helptext)
+        augment_helptext(en_helptext)
         print(f"  {len(en_helptext)} entries")
     else:
         print(f"WARNING: English HelpText not found — cross-language fallback disabled")
@@ -779,6 +877,7 @@ def main():
         helptext = parse_sjson(helptext_path)
         resolve_inheritance(helptext)
         keywords = build_keywords(helptext)
+        augment_helptext(helptext)
         print(f"{len(helptext)} entries, {len(keywords)} keywords")
 
         # Load manual translations
